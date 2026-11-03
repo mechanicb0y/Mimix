@@ -1,0 +1,78 @@
+{
+  "name": "mimix",
+  "version": "0.8.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "specs": "node scripts/build-specs.mjs",
+    "db": "node scripts/db-server.mjs",
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:generate": "drizzle-kit generate",
+    "worker": "tsx --conditions=react-server scripts/worker.ts",
+    "admin:seed": "tsx --conditions=react-server scripts/seed-admin.ts",
+    "stripe:setup": "node scripts/stripe-setup.mjs",
+    "test:unit": "vitest run --project unit",
+    "test:integration": "vitest run --project integration",
+    "openapi": "tsx --conditions=react-server scripts/export-openapi.ts",
+    "vercel-build": "node scripts/vercel-build.mjs"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "3.1152.0",
+    "@aws-sdk/s3-request-presigner": "3.1152.0",
+    "@better-auth/utils": "0.5.0",
+    "@electric-sql/pglite": "0.5.10",
+    "@sentry/nextjs": "11.7.0",
+    "@tanstack/react-query": "5.104.4",
+    "better-auth": "1.7.10",
+    "bullmq": "6.3.17",
+    "drizzle-orm": "0.45.4",
+    "ffmpeg-static": "5.3.0",
+    "file-type": "22.2.0",
+    "ioredis": "6.0.0",
+    "lucide-react": "1.57.0",
+    "next": "16.4.3",
+    "nodemailer": "10.1.7",
+    "postgres": "3.4.9",
+    "radix-ui": "1.8.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "server-only": "^0.0.1",
+    "stripe": "23.0.0",
+    "uqr": "^0.1.3",
+    "wavesurfer.js": "8.0.2",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "@electric-sql/pglite-socket": "0.2.13",
+    "@playwright/test": "1.63.0",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "26.6.6",
+    "@types/nodemailer": "8.0.2",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "drizzle-kit": "0.31.11",
+    "eslint": "10.14.0",
+    "eslint-config-next": "16.4.3",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.23.15",
+    "typescript": "6.0.3",
+    "vitest": "5.0.5"
+  },
+  "overrides": {
+    "playwright-core": "1.63.0",
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.25.12"
+    }
+  }
+}

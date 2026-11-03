@@ -1,0 +1,43 @@
+# Nightly encrypted database backup, kept 30 days as a workflow artifact. This is a second copy on top
+# of Supabase's own daily backups (see docs/runbook.md, "Restore a backup").
+# Secrets: BACKUP_DATABASE_URL (Supabase direct connection, read-only role is enough),
+#          BACKUP_PASSPHRASE (long random string; store it in your password manager too).
+name: Database backup
+
+on:
+  schedule:
+    - cron: '17 2 * * *' # 02:17 UTC daily
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    if: ${{ vars.BACKUPS_ENABLED == 'true' }}
+    steps:
+      - name: Install the PostgreSQL 17 client
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt noble-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client-17
+      - name: Dump and encrypt
+        env:
+          DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+          PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          file="mimix-$(date -u +%Y%m%dT%H%MZ).dump.gpg"
+          /usr/lib/postgresql/17/bin/pg_dump --format=custom --no-owner --no-privileges --schema=public --schema=drizzle "$DATABASE_URL" \
+            | gpg --batch --yes --symmetric --cipher-algo AES256 --passphrase "$PASSPHRASE" -o "$file"
+          ls -l "$file"
+          echo "FILE=$file" >> "$GITHUB_ENV"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.FILE }}
+          path: ${{ env.FILE }}
+          retention-days: 30
+          compression-level: 0

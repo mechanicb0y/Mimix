@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+test-results/
+playwright-report/
+screenshots/
+*.tsbuildinfo
+.env
+.env.local
+.env.*.local
+next-env.d.ts
+
+/.data/
+/local/
+__pycache__/
+*.pyc

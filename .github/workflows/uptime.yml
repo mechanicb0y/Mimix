@@ -1,0 +1,26 @@
+# A backstop uptime check every 10 minutes (GitHub may delay scheduled runs). A failed run emails
+# the repository owner. Use an uptime service as well for 1-minute checks (docs/launch-checklist.md).
+# Variable: PRODUCTION_URL, for example https://mimix.example (no trailing slash).
+name: Uptime
+
+on:
+  schedule:
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    if: ${{ vars.PRODUCTION_URL != '' }}
+    steps:
+      - name: Health check
+        run: |
+          for path in /api/health / /pricing; do
+            code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 15 "${{ vars.PRODUCTION_URL }}$path")
+            echo "$path $code"
+            [ "$code" = "200" ] || { echo "::error::$path answered $code"; exit 1; }
+          done

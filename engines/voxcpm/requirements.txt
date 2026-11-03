@@ -1,0 +1,8 @@
+# Mimix VoxCPM2 engine server (NVIDIA GPU). voxcpm 2.0.3 (2026-05-11, Apache-2.0; weights openbmb/VoxCPM2
+# Apache-2.0); the server packages match the Kokoro engine's. voxcpm's own dependencies are resolved by
+# pip or uv; freeze them after the first successful GPU run.
+voxcpm==2.0.3
+fastapi==0.156.4
+uvicorn[standard]==0.54.0
+python-multipart==0.0.32
+soundfile==0.14.0

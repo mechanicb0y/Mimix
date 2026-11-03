@@ -1,0 +1,4 @@
+# Optional: Speech to Text on CPU (KOKORO_FEATURES=transcribe). faster-whisper is MIT, CTranslate2 MIT, PyAV BSD-3.
+faster-whisper==1.2.1
+ctranslate2==4.8.3
+av==19.0.1

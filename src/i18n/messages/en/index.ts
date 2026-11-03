@@ -1,0 +1,16 @@
+import { common } from './common'
+import { home } from './home'
+import { mixer } from './mixer'
+import { products } from './products'
+import { pricing } from './pricing'
+import { library } from './library'
+import { developers } from './developers'
+import { useCases } from './useCases'
+import { about, contactSales, help } from './company'
+import { errors } from './errors'
+import { emails } from './emails'
+import { app } from './app'
+import { safety } from './safety'
+import { admin } from './admin'
+
+export const en = { common, home, mixer, products, pricing, library, developers, useCases, about, contactSales, help, errors, emails, app, safety, admin }

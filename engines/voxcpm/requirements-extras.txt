@@ -1,0 +1,4 @@
+# Optional extras for the hosted GPU box (FEATURES=...,transcribe / ...,isolate). The local launcher
+# doesn't install these: on one computer the Kokoro server already transcribes and isolates.
+faster-whisper==1.2.1
+deepfilternet==0.5.6

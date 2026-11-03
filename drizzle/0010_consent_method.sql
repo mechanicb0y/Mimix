@@ -1,0 +1,1 @@
+ALTER TABLE "consent_record" ADD COLUMN "method" text DEFAULT 'recording' NOT NULL;

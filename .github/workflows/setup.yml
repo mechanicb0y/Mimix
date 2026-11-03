@@ -1,0 +1,57 @@
+# One-time and occasional setup, run from the browser: Actions > Setup > Run workflow.
+# Pick the environment (staging or production); its secrets live in Settings > Environments.
+#   migrate       apply database migrations (Vercel also does this on each deploy)
+#   admin         create the Owner account for ADMIN_EMAIL (then open /admin/setup)
+#   stripe        create or update the Stripe products and prices from src/config/plans.ts
+name: Setup
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Which environment
+        type: choice
+        options: [staging, production]
+        required: true
+      task:
+        description: What to run
+        type: choice
+        options: [all, migrate, admin, stripe]
+        default: all
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment: ${{ inputs.environment }}
+    env:
+      NODE_ENV: production
+      DATABASE_URL: ${{ secrets.MIGRATE_DATABASE_URL }}
+      MIGRATE_DATABASE_URL: ${{ secrets.MIGRATE_DATABASE_URL }}
+      DATABASE_PREPARE: '1'
+      ADMIN_EMAIL: ${{ vars.ADMIN_EMAIL }}
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+      APP_ENCRYPTION_KEY: ${{ secrets.APP_ENCRYPTION_KEY }}
+      STORAGE_SIGNING_KEY: ${{ secrets.STORAGE_SIGNING_KEY }}
+      APP_URL: ${{ vars.APP_URL }}
+      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
+      STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Migrations
+        if: ${{ inputs.task == 'all' || inputs.task == 'migrate' }}
+        run: npm run db:migrate
+      - name: Owner account
+        if: ${{ inputs.task == 'all' || inputs.task == 'admin' }}
+        run: npm run admin:seed
+      - name: Stripe products and prices
+        if: ${{ inputs.task == 'all' || inputs.task == 'stripe' }}
+        run: npm run stripe:setup
