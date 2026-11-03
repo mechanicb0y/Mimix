@@ -117,7 +117,7 @@ A marketing site, the app, an admin console and a public API in one Next.js 16 p
 </td>
 <td width="33%" valign="top">
 
-### 🔌 Developer API
+### 🔌 Built for developers
 **99 operations** under `/api/v1`, described in OpenAPI 3.1. API keys with scopes and credit caps, background jobs with live progress, and signed webhooks.
 
 </td>
