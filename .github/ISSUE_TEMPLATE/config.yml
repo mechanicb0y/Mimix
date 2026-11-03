@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security problem
+    url: https://github.com/mechanicb0y/Mimix/security/advisories/new
+    about: Report vulnerabilities privately, never in a public issue.
+  - name: Help starting Mimix on your computer
+    url: https://github.com/mechanicb0y/Mimix/blob/main/docs/local-setup.md#common-problems
+    about: Most start-up problems have a fix in the local setup guide.

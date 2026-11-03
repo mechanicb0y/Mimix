@@ -8,6 +8,7 @@
 - Consent records gain a `method` column (`recording` or `attest`); migration `0010_consent_method.sql`.
 - The launcher reads the voice engine's log to tell which extra failed to start (Speech to Text or cloning) and turns off only that one.
 - Launch checklist: a public site keeps `CLONE_CONSENT=recording` until the lawyer clears consent by confirmation alone.
+- **On GitHub:** a new README with screenshots, diagrams and the full feature tour; the previous README is now `docs/development.md`. Added `LICENSE` (source-available), `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, `SECURITY.md`, issue and pull request templates and Dependabot. `.env.example`, the launcher and the guides no longer carry a personal email: the Owner is `owner@example.com` unless `MIMIX_OWNER_EMAIL` is set before the first start.
 
 ## 0.8.0 · 2026-11-03 · Fixes, cloning, design, graphics card and 54 voices
 

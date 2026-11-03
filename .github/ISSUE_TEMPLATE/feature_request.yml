@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest an idea or an improvement for Mimix.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe what you were trying to do and what got in the way.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Text to Speech or Studio
+        - Voice Mixer
+        - Cloning or Voice Design
+        - Voice Library
+        - Dubbing
+        - Speech to Text or Voice Isolator
+        - Developer API or webhooks
+        - Admin console
+        - Running Mimix on my computer
+        - Website or documentation
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Anything you've tried instead?

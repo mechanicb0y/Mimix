@@ -1,0 +1,67 @@
+name: Bug report
+description: Something in Mimix doesn't work the way it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting this. **Never paste secrets** here: not your `.env.local`, API keys, tokens or recovery codes.
+        Security problems go through the [security policy](https://github.com/mechanicb0y/Mimix/blob/main/SECURITY.md), not a public issue.
+        Many start-up problems already have a fix in [Common problems](https://github.com/mechanicb0y/Mimix/blob/main/docs/local-setup.md#common-problems).
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open Text to Speech
+        2. Choose the voice …
+        3. Click Generate speech
+        4. See …
+    validations:
+      required: true
+  - type: dropdown
+    id: how
+    attributes:
+      label: How do you run Mimix?
+      options:
+        - Start Mimix on Windows
+        - Start Mimix on a Mac
+        - Start Mimix on Linux
+        - npm run dev or npm start
+        - Hosted (Vercel or similar)
+    validations:
+      required: true
+  - type: dropdown
+    id: engine
+    attributes:
+      label: Voice engine
+      options:
+        - kokoro (the default with Start Mimix)
+        - mock
+        - chatterbox or voxcpm (graphics card)
+        - inworld
+        - Not sure
+  - type: input
+    id: version
+    attributes:
+      label: Mimix version
+      description: The newest version in CHANGELOG.md, or the commit.
+      placeholder: 0.8.1
+  - type: textarea
+    id: logs
+    attributes:
+      label: Messages from the Mimix window or the browser console
+      description: Remove anything private before pasting.
+      render: text
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Screenshots or a short screen recording help a lot.
