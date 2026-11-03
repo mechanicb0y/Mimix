@@ -247,7 +247,7 @@ flowchart LR
 4. **Create the Owner account** at **http://localhost:3000/admin/setup** with the `ADMIN_SETUP_TOKEN` from the new `.env.local` file, then turn on two-factor sign-in.
 5. **Stop it** by closing the window or double-clicking **Stop Mimix**.
 
-Everything the launcher sets up (a private Node.js, Python 3.12, Kokoro and its models, DeepFilterNet, stripe-mock, the database) goes into the project's `local/` folder, and every download is checked against a pinned SHA-256. The Owner account uses `owner@example.com` unless `MIMIX_OWNER_EMAIL` is set before the first start; you can change it any time in *Settings → Profile*.
+The tools the launcher sets up (a private Node.js, Python 3.12, Kokoro and its models, DeepFilterNet and stripe-mock) go into the project's `local/` folder, your data (database, audio, emails) into `.data/`, and every download is checked against a pinned SHA-256. Nothing is installed on the system. The Owner account uses `owner@example.com` unless `MIMIX_OWNER_EMAIL` is set before the first start; you can change it any time in *Settings → Profile*.
 
 📖 **Step-by-step guide, with common problems:** [docs/local-setup.md](docs/local-setup.md)
 
