@@ -1,0 +1,85 @@
+# Lint, typecheck, unit and integration tests, production build, and browser tests on every push and
+# pull request. Needs no secrets: the database is PGlite, billing is stripe-mock, voices are the mock engine.
+name: CI
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  STRIPE_MOCK_VERSION: v0.206.0
+  NEXT_TELEMETRY_DISABLED: '1'
+
+jobs:
+  check:
+    name: Lint, typecheck, test, build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+      - name: Install stripe-mock
+        run: go install github.com/stripe/stripe-mock@${STRIPE_MOCK_VERSION}
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Unit and integration tests
+        run: npm test
+        env:
+          STRIPE_MOCK_BIN: /home/runner/go/bin/stripe-mock
+      - run: npm run build
+      - name: Production dependencies have no known vulnerabilities
+        run: npm audit --omit=dev --audit-level=high
+
+  e2e:
+    name: Browser tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    needs: check
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-go@v5
+        with:
+          go-version: stable
+          cache: false
+      - run: go install github.com/stripe/stripe-mock@${STRIPE_MOCK_VERSION}
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Start the local database and stripe-mock
+        run: |
+          (npm run db > db.log 2>&1 &)
+          (/home/runner/go/bin/stripe-mock -http-port 12111 > stripe-mock.log 2>&1 &)
+          for i in $(seq 1 30); do nc -z 127.0.0.1 5433 && break; sleep 1; done
+          npm run db:migrate
+      - name: Playwright
+        run: npx playwright test
+        env:
+          STRIPE_API_BASE: http://localhost:12111
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+            db.log
+          retention-days: 7

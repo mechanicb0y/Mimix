@@ -1,0 +1,42 @@
+export const library = {
+  seo: {
+    title: 'Voice Library: preview AI voices ready to use or remix',
+    description: 'Browse Mimix voices by language, accent, gender, age and use case. Play any voice in one click and see which ones you can mix.',
+  },
+  hero: {
+    overline: 'Voice Library',
+    title: 'Find your sound, then make a new one',
+    lead: 'Browse voices by language, accent and mood. Every card plays in one click, and the badge tells you whether it can be mixed.',
+    count: '{count} voices in this preview',
+  },
+  filters: {
+    title: 'Filter voices',
+    search: 'Search voices',
+    searchPlaceholder: 'Name, accent or style',
+    language: 'Language',
+    accent: 'Accent',
+    gender: 'Gender',
+    age: 'Age',
+    useCase: 'Use case',
+    any: 'Any',
+    reset: 'Clear filters',
+    results: '{count} voices',
+    resultsOne: '1 voice',
+  },
+  values: {
+    language: { en: 'English', es: 'Spanish', fr: 'French', de: 'German', hi: 'Hindi', ms: 'Malay', ar: 'Arabic', ja: 'Japanese', zh: 'Mandarin Chinese', it: 'Italian', pt: 'Portuguese' },
+    accent: { british: 'British', american: 'American', australian: 'Australian', scottish: 'Scottish', indian: 'Indian', gulf: 'Gulf', castilian: 'Castilian', irish: 'Irish', standard: 'Standard', malaysian: 'Malaysian', brazilian: 'Brazilian' },
+    gender: { female: 'Female', male: 'Male', neutral: 'Neutral' },
+    age: { young: 'Young', middle: 'Middle-aged', older: 'Older' },
+    useCase: { narration: 'Narration', conversational: 'Conversational', characters: 'Characters', advertising: 'Advertising', education: 'Education', news: 'News' },
+    licence: { remix: 'Remix allowed', standard: 'Standard' },
+  },
+  sampleText: 'Hello there. This is how I sound reading a short line for you.',
+  empty: { title: 'No voices match those filters', body: 'Try removing a filter or searching for something broader.', action: 'Clear filters' },
+  publish: {
+    title: 'Share your own voice',
+    body: 'Publish a verified clone or a designed voice to the library. Every voice is reviewed by our moderation team before it appears, and you choose whether others may mix it.',
+    cta: 'Read the voice cloning policy',
+  },
+  cta: { title: 'Save the voices you love', body: 'Sign up free to save voices, use them in every tool and publish your own.' },
+}

@@ -1,0 +1,9 @@
+# Mimix Chatterbox Multilingual engine (NVIDIA GPU). Installed by the launcher into local/py-gpu with
+# uv's --torch-backend auto, which picks the PyTorch build for the computer's NVIDIA driver.
+# Licences: chatterbox-tts MIT (weights ResembleAI/chatterbox, MIT), resemble-perth MIT, PyTorch BSD-3-Clause.
+# chatterbox-tts pins its own torch (2.6.0), numpy and transformers versions.
+chatterbox-tts==0.1.7
+fastapi==0.156.4
+uvicorn[standard]==0.54.0
+python-multipart==0.0.32
+soundfile==0.14.0

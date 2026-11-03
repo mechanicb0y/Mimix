@@ -1,0 +1,21 @@
+# Mimix Kokoro engine (CPU). Versions verified in the local test (2026-11-03), all at least two weeks old.
+kokoro-onnx==0.6.1
+# onnxruntime stopped publishing Intel Mac builds after 1.23; Apple Silicon needs macOS 14 or newer for 1.31.
+onnxruntime==1.31.0; sys_platform != "darwin" or platform_machine == "arm64"
+onnxruntime==1.23.2; sys_platform == "darwin" and platform_machine == "x86_64"
+numpy==2.5.4
+scipy==1.18.1
+soundfile==0.14.0
+fastapi==0.156.4
+uvicorn[standard]==0.54.0
+python-multipart==0.0.32
+# Mandarin and Japanese voices (misaki needs Python 3.12 or older). Licences: misaki Apache-2.0;
+# jieba, pypinyin, pypinyin-dict, cn2an, ordered-set, pyopenjtalk-plus MIT (Open JTalk and its
+# dictionary BSD-3-Clause); sudachipy and SudachiDict (pulled in by pyopenjtalk-plus) Apache-2.0.
+misaki==0.9.4; python_version < "3.13"
+jieba==0.42.1; python_version < "3.13"
+pypinyin==0.55.0; python_version < "3.13"
+pypinyin-dict==0.9.0; python_version < "3.13"
+cn2an==0.5.23; python_version < "3.13"
+ordered-set==4.1.0; python_version < "3.13"
+pyopenjtalk-plus==0.4.1.post9; python_version < "3.13"

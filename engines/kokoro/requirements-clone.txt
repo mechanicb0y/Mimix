@@ -1,0 +1,8 @@
+# Optional: voice cloning on CPU (KOKORO_FEATURES=clone). Installed with uv's --torch-backend cpu,
+# so PyTorch comes without the CUDA libraries (about 200 MB instead of 3 GB).
+# Licences: PyTorch BSD-3-Clause; sherpa-onnx and sherpa-onnx-core Apache-2.0. Models (downloaded by
+# the launcher): OpenVoice v2 converter MIT (myshell-ai/OpenVoiceV2), CAM++ VoxCeleb Apache-2.0
+# (3D-Speaker iic/speech_campplus_sv_en_voxceleb_16k, ONNX export from k2-fsa/sherpa-onnx).
+torch==2.14.1
+sherpa-onnx==1.13.8
+sherpa-onnx-core==1.13.8

@@ -1,0 +1,13 @@
+# Mimix job worker: dubbing, cloning, Studio exports, transcription, isolation, voice changing, and
+# the 60-second sweeps. Runs `npm run worker` against the same database, storage and Redis as the site.
+FROM node:22-bookworm-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg ca-certificates && rm -rf /var/lib/apt/lists/*
+WORKDIR /app
+COPY package.json package-lock.json ./
+# Skips the bundled ffmpeg download: this image uses Debian's ffmpeg (FFMPEG_PATH below).
+RUN npm ci --ignore-scripts && npm cache clean --force
+COPY . .
+
+ENV NODE_ENV=production QUEUE_DRIVER=bullmq FFMPEG_PATH=/usr/bin/ffmpeg NEXT_TELEMETRY_DISABLED=1
+CMD ["npm", "run", "worker"]
