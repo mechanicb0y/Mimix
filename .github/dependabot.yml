@@ -15,6 +15,9 @@ updates:
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
+      # Pinned on purpose with the overrides in package.json (playwright-core 1.63.0): update by hand.
+      - dependency-name: "@playwright/test"
+      - dependency-name: "playwright-core"
   - package-ecosystem: github-actions
     directory: /
     schedule:
