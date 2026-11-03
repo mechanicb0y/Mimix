@@ -1,0 +1,29 @@
+Mimix
+Copyright (c) 2026 mechanicb0y. All rights reserved.
+
+The source code, documentation, designs and other material in this repository (the
+"Software") belong to the copyright holder. The source is published so that people can
+read it, learn from it, try it and report issues. Mimix is not open-source software.
+
+Permitted without asking:
+  1. Viewing the source on GitHub, and the copying that GitHub's Terms of Service allow
+     for public repositories (such as forking within GitHub).
+  2. Downloading the Software and running it on your own computer to evaluate it, for
+     personal, non-commercial purposes.
+
+Any other use needs the copyright holder's prior written permission. This includes using
+the Software, or any part of it, in a product or service; offering it to other people as
+a hosted service; and copying, modifying, merging, publishing, distributing,
+sublicensing or selling it.
+
+Third-party components in this repository, such as the OpenVoice v2 code in
+engines/kokoro/openvoice, keep their own licences, which are stated in or next to those
+components. Models and tools that the Software downloads when it runs are covered by
+their own licences.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+THE USE OR OTHER DEALINGS IN THE SOFTWARE.

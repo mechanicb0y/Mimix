@@ -1,0 +1,1379 @@
+<title>Mimix Design System</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Sora:wght@600;700&display=swap">
+<style>
+/* Layout: sticky left index beside one long reading column of spec sections; collapses to a top index under 1024px. */
+/*@@TOKENS@@*/
+
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 16px; line-height: 24px; -webkit-font-smoothing: antialiased; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { animation-duration: 150ms !important; animation-iteration-count: 1 !important; transition-duration: 150ms !important; transition-property: opacity !important; scroll-behavior: auto !important; }
+  .m-spinner__anim { display: none !important; }
+  .m-spinner__still { display: inline-flex !important; }
+  .m-btn[aria-busy="true"] .m-btn__label { display: none; }
+  .skel::after, .m-progress.indet > div { animation: none !important; transform: none !important; }
+  .rec-btn.live { box-shadow: 0 0 0 4px rgba(200, 50, 62, 0.45); }
+}
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 110; background: var(--bg); }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; text-wrap: balance; margin: 0; }
+h1 { font-size: var(--text-5xl); line-height: var(--leading-5xl); letter-spacing: -0.02em; font-weight: 700; }
+h2 { font-size: var(--text-3xl); line-height: var(--leading-3xl); }
+h3 { font-size: var(--text-lg); line-height: var(--leading-lg); }
+p { margin: 0; }
+code, .mono { font-family: var(--font-mono); font-size: 13px; }
+a { color: var(--primary-text); text-underline-offset: 3px; }
+:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.overline { font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); }
+.muted { color: var(--text-muted); }
+.subtle { color: var(--text-subtle); }
+.lucide { width: 20px; height: 20px; stroke-width: 1.75; flex: none; }
+.i16 { width: 16px; height: 16px; } .i24 { width: 24px; height: 24px; }
+
+/* Header */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: var(--z-header); background: var(--header-bg); backdrop-filter: var(--header-blur); -webkit-backdrop-filter: var(--header-blur); border-bottom: 1px solid var(--border); }
+.top-in { max-width: var(--container-wide); margin: 0 auto; display: flex; align-items: center; gap: 16px; height: 60px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.brand { display: flex; align-items: baseline; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 20px; }
+.brand small { font-family: var(--font-body); font-weight: 500; font-size: 13px; color: var(--text-subtle); }
+.top .m-seg { margin-left: auto; }
+@media (max-width: 520px) { .top .m-seg span, .brand small { display: none; } .top .m-seg button { padding: 6px 10px; } }
+
+.wrap { max-width: var(--container-wide); margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 40px 96px; }
+.toc { position: sticky; top: 84px; align-self: start; display: flex; flex-direction: column; gap: 2px; font-size: 14px; line-height: 20px; }
+.toc a { color: var(--text-muted); text-decoration: none; padding: 6px 10px; border-radius: var(--radius-sm); }
+.toc a:hover { color: var(--text); background: var(--surface-2); }
+.toc .overline { padding: 0 10px 8px; }
+main { min-width: 0; display: flex; flex-direction: column; gap: 96px; }
+@media (max-width: 1023.98px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 24px 64px; }
+  .toc { position: static; flex-direction: row; flex-wrap: wrap; gap: 4px; }
+  .toc .overline { width: 100%; }
+  .toc a { background: var(--surface); border: 1px solid var(--border); }
+}
+section { display: flex; flex-direction: column; gap: 24px; }
+.sec-head { display: flex; flex-direction: column; gap: 8px; max-width: 68ch; }
+.sec-head p { color: var(--text-muted); }
+.hero { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 32px; align-items: end; }
+.hero p { color: var(--text-muted); font-size: 18px; line-height: 28px; max-width: 56ch; margin-top: 16px; }
+.hero-wave { height: 140px; width: 100%; border-radius: var(--radius-xl); background: var(--surface); border: 1px solid var(--border); }
+@media (max-width: 767.98px) { .hero { grid-template-columns: 1fr; } .hero p { font-size: 16px; line-height: 24px; } }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 899.98px) { .grid2, .grid3 { grid-template-columns: minmax(0, 1fr); } }
+.scroll-x { overflow-x: auto; min-width: 0; }
+.spec { font-family: var(--font-mono); font-size: 12px; line-height: 18px; color: var(--text-subtle); background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 10px 12px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.note { font-size: 14px; line-height: 20px; color: var(--text-muted); }
+
+/* Palette and swatches */
+.photo-strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
+.photo-strip div { min-height: 112px; padding: 10px; display: flex; flex-direction: column; justify-content: flex-end; font-size: 12px; line-height: 16px; }
+.photo-strip b { font-weight: 600; display: block; }
+@media (max-width: 640px) { .photo-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } .photo-strip div { min-height: 72px; } }
+.role-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 20px; }
+.role-table th, .role-table td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.role-table th { color: var(--text-subtle); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap; }
+.role-table td { font-variant-numeric: tabular-nums; }
+.role-table code, .role-table .chip { white-space: nowrap; }
+.roles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 560px), 1fr)); gap: 16px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; font-family: var(--font-mono); font-size: 12px; }
+.chip i { width: 18px; height: 18px; border-radius: 5px; border: 1px solid rgba(128, 128, 128, 0.35); display: inline-block; }
+.ba { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+@media (max-width: 899.98px) { .ba { grid-template-columns: minmax(0, 1fr); } }
+.ba-card { border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
+.ba-card header { padding: 10px 14px; display: flex; justify-content: space-between; gap: 8px; font-size: 13px; font-weight: 600; background: var(--surface-2); color: var(--text); flex-wrap: wrap; }
+.ba-rows { display: flex; flex-direction: column; }
+.ba-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 10px 14px; border-top: 1px solid rgba(128, 128, 128, 0.18); }
+.ba-row .sample { font-size: 15px; line-height: 22px; overflow-wrap: anywhere; }
+.ba-row .sample small { display: block; font-family: var(--font-mono); font-size: 11px; line-height: 16px; opacity: 0.85; }
+.verdict { font-family: var(--font-mono); font-size: 12px; font-weight: 500; padding: 2px 8px; border-radius: var(--radius-full); white-space: nowrap; }
+.v-pass { background: #0B7046; color: #FFFFFF; }
+.v-fail { background: #C8323E; color: #FFFFFF; }
+
+/* Scales */
+.type-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.type-row .spec { background: none; border: 0; padding: 0; }
+.type-row > div:last-child { min-width: 0; overflow-wrap: anywhere; }
+.space-row { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; align-items: center; font-size: 13px; }
+.space-bar { height: 12px; border-radius: 3px; background: var(--primary); }
+.rad-grid, .elev-grid, .z-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 16px; }
+.rad-box { height: 88px; background: var(--surface-2); border: 1px solid var(--border-strong); display: grid; place-items: center; font-size: 13px; }
+.elev-box { height: 96px; background: var(--surface); border-radius: var(--radius-lg); display: grid; place-items: center; font-size: 13px; border: 1px solid var(--border); }
+.grad-box { height: 96px; border-radius: var(--radius-lg); display: flex; align-items: flex-end; padding: 12px; font-size: 13px; font-weight: 600; }
+.motion-demo { display: flex; flex-direction: column; gap: 12px; }
+.motion-track { position: relative; height: 40px; background: var(--surface-2); border-radius: var(--radius-full); overflow: hidden; }
+.motion-dot { position: absolute; top: 6px; left: 6px; width: 28px; height: 28px; border-radius: 50%; background: var(--primary); transition-property: transform; }
+.motion-track.go .motion-dot { transform: translateX(calc(var(--track-w, 300px) - 40px)); }
+.z-stack { position: relative; height: 200px; }
+.z-stack div { position: absolute; width: 58%; height: 64px; border-radius: var(--radius-md); padding: 8px 12px; font-size: 12px; line-height: 16px; border: 1px solid var(--border-strong); background: var(--surface-2); box-shadow: var(--shadow-md); }
+.icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
+.icon-cell { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 14px 6px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 11px; color: var(--text-subtle); text-align: center; overflow-wrap: anywhere; }
+.icon-cell .sizes { display: flex; gap: 10px; align-items: flex-end; color: var(--text); }
+.bp-bar { position: relative; height: 48px; border-radius: var(--radius-md); background: var(--surface-2); overflow: hidden; }
+.bp-bar span { position: absolute; top: 0; bottom: 0; border-left: 2px solid var(--accent); padding: 4px 6px; font-size: 11px; line-height: 14px; font-family: var(--font-mono); color: var(--text-muted); }
+.ratio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.ratio-box { background: var(--gradient-brand); border-radius: var(--radius-md); display: grid; place-items: center; color: var(--on-primary); font-family: var(--font-mono); font-size: 12px; max-width: 100%; }
+
+/* ===== Components ===== */
+.states { display: grid; grid-template-columns: 112px repeat(var(--cols, 7), minmax(120px, 1fr)); gap: 12px 16px; align-items: center; min-width: max-content; }
+.states .h { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-subtle); }
+.states .rl { font-size: 13px; color: var(--text-muted); }
+.comp { display: flex; flex-direction: column; gap: 14px; }
+.comp h3 { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.comp h3 small { font-family: var(--font-body); font-weight: 500; font-size: 13px; color: var(--text-subtle); }
+.demo { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+/* Buttons */
+.m-btn { --h: 40px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: var(--h); min-width: var(--h); padding: 0 16px; border-radius: var(--radius-md); border: 1px solid transparent; font: 600 14px/20px var(--font-body); cursor: pointer; text-decoration: none; white-space: nowrap; transition: background-color var(--duration-fast) var(--ease-enter), border-color var(--duration-fast) var(--ease-enter), transform var(--duration-fast) var(--ease-enter), box-shadow var(--duration-fast) var(--ease-enter); }
+.m-btn .lucide { width: 18px; height: 18px; }
+.m-btn.sm { --h: 32px; padding: 0 12px; gap: 6px; font-size: 13px; line-height: 18px; }
+.m-btn.sm .lucide { width: 16px; height: 16px; }
+.m-btn.lg { --h: 48px; padding: 0 20px; font-size: 16px; line-height: 24px; }
+.m-btn.lg .lucide { width: 20px; height: 20px; }
+.m-btn.icon { padding: 0; width: var(--h); }
+.m-btn.primary { background: var(--primary); color: var(--on-primary); }
+.m-btn.primary:hover, .m-btn.primary.is-hover { background: var(--primary-hover); }
+.m-btn.primary:active, .m-btn.primary.is-active { background: var(--primary-active); transform: translateY(1px); }
+.m-btn.secondary { background: var(--surface-2); color: var(--text); border-color: var(--border-strong); }
+.m-btn.secondary:hover, .m-btn.secondary.is-hover { background: var(--surface-3); }
+.m-btn.secondary:active, .m-btn.secondary.is-active { background: var(--surface-3); transform: translateY(1px); }
+.m-btn.ghost { background: transparent; color: var(--text); }
+.m-btn.ghost:hover, .m-btn.ghost.is-hover { background: var(--surface-2); }
+.m-btn.ghost:active, .m-btn.ghost.is-active { background: var(--surface-3); transform: translateY(1px); }
+.m-btn.danger { background: var(--danger-solid); color: var(--on-danger); }
+.m-btn.danger:hover, .m-btn.danger.is-hover { background: var(--danger-solid-hover); }
+.m-btn.danger:active, .m-btn.danger.is-active { background: var(--danger-solid-hover); transform: translateY(1px); }
+.m-btn.is-focus { box-shadow: var(--focus-ring); }
+.m-btn:disabled, .m-btn[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; transform: none; }
+.m-btn[aria-busy="true"] { cursor: progress; }
+.spin { animation: spin 800ms linear infinite; }
+.m-spinner { display: inline-flex; align-items: center; gap: 6px; }
+.m-spinner__still { display: none; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (pointer: coarse) { .m-btn { min-height: 44px; } .m-btn.icon { min-width: 44px; } }
+
+/* Fields */
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label, .lbl { font-size: 14px; line-height: 20px; font-weight: 500; color: var(--text); }
+.help { font-size: 13px; line-height: 18px; color: var(--text-subtle); }
+.err { font-size: 13px; line-height: 18px; color: var(--danger); display: flex; gap: 6px; align-items: flex-start; }
+.err .lucide { width: 16px; height: 16px; margin-top: 1px; }
+.m-input, .m-textarea, .m-select { width: 100%; min-width: 0; height: 40px; padding: 0 12px; border-radius: var(--radius-md); border: 1px solid var(--border-strong); background: var(--surface-2); color: var(--text); font: 400 16px/24px var(--font-body); transition: border-color var(--duration-fast) var(--ease-enter), box-shadow var(--duration-fast) var(--ease-enter); }
+.m-textarea { height: auto; min-height: 112px; padding: 10px 12px; resize: vertical; }
+.m-input::placeholder, .m-textarea::placeholder { color: var(--text-subtle); opacity: 1; }
+.m-input:hover, .m-textarea:hover, .m-select:hover, .is-hover > .m-input, .m-input.is-hover, .m-select.is-hover, .m-textarea.is-hover { border-color: var(--text-muted); }
+.m-input:focus-visible, .m-textarea:focus-visible, .m-select:focus-visible, .m-input.is-focus, .m-select.is-focus, .m-textarea.is-focus { border-color: var(--focus); box-shadow: var(--focus-ring); outline: none; }
+.m-input:disabled, .m-textarea:disabled, .m-select:disabled { opacity: 0.45; cursor: not-allowed; }
+.m-input[aria-invalid="true"], .m-textarea[aria-invalid="true"], .m-select[aria-invalid="true"] { border-color: var(--danger); }
+.m-select { appearance: none; padding-right: 40px; cursor: pointer; background-image: var(--chev); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; }
+.input-wrap { position: relative; display: flex; align-items: center; min-width: 0; }
+.input-wrap .lead { position: absolute; left: 12px; color: var(--text-subtle); pointer-events: none; }
+.input-wrap .trail { position: absolute; right: 12px; color: var(--text-subtle); }
+.input-wrap .m-input.with-lead { padding-left: 40px; }
+.count { font-size: 12px; line-height: 16px; color: var(--text-subtle); text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Combobox, dropdown, tooltip */
+.pop { position: absolute; z-index: var(--z-dropdown); top: calc(100% + 6px); left: 0; min-width: 100%; background: var(--surface); border: 1px solid var(--border-strong); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); padding: 6px; display: flex; flex-direction: column; gap: 2px; max-height: 264px; overflow: auto; animation: popIn var(--duration-base) var(--ease-enter); }
+@keyframes popIn { from { opacity: 0; transform: translateY(-4px) scale(0.98); } }
+.opt { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; cursor: pointer; color: var(--text); min-height: 36px; }
+.opt small { color: var(--text-subtle); margin-left: auto; font-size: 12px; }
+.opt[aria-selected="true"], .opt.active, .opt:hover { background: var(--surface-3); }
+.opt[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+.opt.danger { color: var(--danger); }
+.sep { height: 1px; background: var(--border); margin: 4px 0; }
+.relative { position: relative; }
+.tip-host { position: relative; display: inline-flex; }
+.tip { position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); z-index: var(--z-tooltip); background: var(--text); color: var(--bg); font-size: 12px; line-height: 16px; font-weight: 500; padding: 6px 8px; border-radius: var(--radius-sm); white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity var(--duration-fast) var(--ease-exit); }
+.tip-host:hover .tip, .tip-host:focus-within .tip, .tip.show { opacity: 1; transition-delay: 400ms; }
+.tip.show { transition-delay: 0ms; }
+
+/* Slider */
+.m-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 24px; background: transparent; cursor: pointer; }
+.m-slider::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: linear-gradient(to right, var(--primary) var(--p, 50%), var(--border-strong) var(--p, 50%)); }
+.m-slider::-moz-range-track { height: 4px; border-radius: 2px; background: var(--border-strong); }
+.m-slider::-moz-range-progress { height: 4px; border-radius: 2px; background: var(--primary); }
+.m-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; margin-top: -8px; border-radius: 50%; background: var(--text); border: 4px solid var(--primary); transition: transform var(--duration-fast) var(--ease-enter); }
+.m-slider::-moz-range-thumb { width: 12px; height: 12px; border-radius: 50%; background: var(--text); border: 4px solid var(--primary); }
+.m-slider:hover::-webkit-slider-thumb { transform: scale(1.1); }
+.m-slider:focus-visible { box-shadow: none; }
+.m-slider:focus-visible::-webkit-slider-thumb { box-shadow: var(--focus-ring); }
+.m-slider:focus-visible::-moz-range-thumb { box-shadow: var(--focus-ring); }
+.m-slider:disabled { opacity: 0.45; cursor: not-allowed; }
+.slider-head { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+.slider-head output { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); }
+.slider-ends { display: flex; justify-content: space-between; font-size: 12px; line-height: 16px; color: var(--text-subtle); }
+
+/* Toggle, checkbox, radio */
+.m-toggle { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; min-height: 24px; }
+.m-toggle input { position: absolute; opacity: 0; width: 40px; height: 24px; margin: 0; cursor: pointer; }
+.m-toggle .track { width: 40px; height: 24px; border-radius: 12px; background: var(--surface-3); border: 1px solid var(--border-strong); position: relative; transition: background-color var(--duration-fast) var(--ease-enter); flex: none; }
+.m-toggle .track::after { content: ""; position: absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--text-muted); transition: transform var(--duration-fast) var(--ease-enter), background-color var(--duration-fast); }
+.m-toggle input:checked + .track { background: var(--primary); border-color: var(--primary); }
+.m-toggle input:checked + .track::after { transform: translateX(16px); background: var(--on-primary); }
+.m-toggle input:focus-visible + .track, .m-toggle.is-focus .track { box-shadow: var(--focus-ring); }
+.m-toggle input:disabled ~ * { opacity: 0.45; }
+.m-check, .m-radio { display: inline-flex; align-items: center; gap: 10px; font-size: 14px; cursor: pointer; position: relative; min-height: 24px; }
+.m-check input, .m-radio input { position: absolute; opacity: 0; width: 20px; height: 20px; margin: 0; cursor: pointer; }
+.m-check .box, .m-radio .box { width: 20px; height: 20px; border: 1.5px solid var(--border-strong); background: var(--surface-2); display: grid; place-items: center; flex: none; transition: background-color var(--duration-fast), border-color var(--duration-fast); }
+.m-check .box { border-radius: 5px; }
+.m-radio .box { border-radius: 50%; }
+.m-check .box svg { width: 14px; height: 14px; stroke-width: 3; color: var(--on-primary); opacity: 0; }
+.m-check input:checked + .box, .m-check input:indeterminate + .box { background: var(--primary); border-color: var(--primary); }
+.m-check input:checked + .box svg { opacity: 1; }
+.m-radio input:checked + .box { border-color: var(--primary); }
+.m-radio input:checked + .box::after { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); }
+.m-check:hover .box, .m-radio:hover .box { border-color: var(--text-muted); }
+.m-check input:focus-visible + .box, .m-radio input:focus-visible + .box, .m-check.is-focus .box { box-shadow: var(--focus-ring); }
+.m-check input:disabled ~ *, .m-radio input:disabled ~ * { opacity: 0.45; cursor: not-allowed; }
+.m-check input[aria-invalid="true"] + .box { border-color: var(--danger); }
+
+/* Tabs and segmented */
+.m-tabs [role="tablist"] { display: flex; gap: 4px; border-bottom: 1px solid var(--border); overflow-x: auto; }
+.m-tab { appearance: none; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 10px 12px; font: 500 14px/20px var(--font-body); color: var(--text-muted); cursor: pointer; white-space: nowrap; border-radius: var(--radius-sm) var(--radius-sm) 0 0; }
+.m-tab:hover { color: var(--text); }
+.m-tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--primary); }
+.m-tab:disabled { opacity: 0.45; cursor: not-allowed; }
+.m-tabs [role="tabpanel"] { padding: 16px 0 0; font-size: 14px; color: var(--text-muted); }
+.m-seg { display: inline-flex; padding: 3px; gap: 2px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-md); }
+.m-seg button { appearance: none; border: 0; background: transparent; color: var(--text-muted); font: 500 13px/18px var(--font-body); padding: 6px 12px; border-radius: 7px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; min-height: 30px; }
+.m-seg button .lucide { width: 16px; height: 16px; }
+.m-seg button:hover { color: var(--text); }
+.m-seg button[aria-pressed="true"], .m-seg button[aria-checked="true"] { background: var(--surface); color: var(--text); box-shadow: var(--shadow-sm); }
+
+/* Modal, drawer, toast */
+.m-overlay { position: fixed; inset: 0; background: var(--overlay); z-index: var(--z-modal); display: grid; place-items: center; padding: 16px; animation: fadeIn var(--duration-slow) var(--ease-enter); }
+@keyframes fadeIn { from { opacity: 0; } }
+.m-modal { width: min(480px, 100%); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); padding: 24px; display: flex; flex-direction: column; gap: 16px; animation: modalIn var(--duration-slow) var(--ease-enter); }
+@keyframes modalIn { from { opacity: 0; transform: translateY(8px) scale(0.97); } }
+.m-modal h2 { font-size: 20px; line-height: 28px; }
+.m-modal .actions { display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap; }
+.m-drawer-ov { position: fixed; inset: 0; background: var(--overlay); z-index: var(--z-drawer); animation: fadeIn var(--duration-slow) var(--ease-enter); }
+.m-drawer { position: fixed; top: 0; right: 0; bottom: 0; width: min(400px, 92vw); background: var(--surface); border-left: 1px solid var(--border); z-index: var(--z-drawer); padding: calc(20px + env(safe-area-inset-top, 0px)) calc(20px + env(safe-area-inset-right, 0px)) calc(20px + env(safe-area-inset-bottom, 0px)) 20px; display: flex; flex-direction: column; gap: 16px; box-shadow: var(--shadow-lg); animation: drawerIn var(--duration-slow) var(--ease-enter); }
+@keyframes drawerIn { from { transform: translateX(100%); } }
+.m-drawer header, .m-modal header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.toasts { position: fixed; z-index: var(--z-toast); right: max(16px, calc(16px + env(safe-area-inset-right, 0px))); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); display: flex; flex-direction: column; gap: 8px; width: min(360px, calc(100vw - 32px)); }
+.m-toast { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 14px; border-radius: var(--radius-md); background: var(--surface-2); border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg); font-size: 14px; line-height: 20px; animation: toastIn var(--duration-base) var(--ease-enter); }
+.m-toast.static { animation: none; box-shadow: var(--shadow-sm); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(8px); } }
+.m-toast b { display: block; font-weight: 600; }
+.m-toast .t-ok { color: var(--success); } .m-toast .t-warn { color: var(--warning); } .m-toast .t-err { color: var(--danger); } .m-toast .t-info { color: var(--accent); }
+.m-toast button { appearance: none; border: 0; background: none; color: var(--text-subtle); cursor: pointer; padding: 2px; border-radius: var(--radius-sm); display: grid; place-items: center; min-width: 24px; min-height: 24px; }
+
+/* Badge, card, table, pagination, breadcrumb, avatar */
+.m-badge { display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px; border-radius: var(--radius-full); font-size: 12px; line-height: 16px; font-weight: 600; border: 1px solid var(--border); background: var(--surface-2); color: var(--text-muted); white-space: nowrap; }
+.m-badge .lucide { width: 12px; height: 12px; }
+.m-badge.ok { color: var(--success); border-color: currentColor; background: transparent; }
+.m-badge.warn { color: var(--warning); border-color: currentColor; background: transparent; }
+.m-badge.bad { color: var(--danger); border-color: currentColor; background: transparent; }
+.m-badge.brand { color: var(--on-primary); background: var(--primary); border-color: var(--primary); }
+.m-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: border-color var(--duration-fast) var(--ease-enter), transform var(--duration-fast) var(--ease-enter), box-shadow var(--duration-fast); min-width: 0; }
+.m-card.link { cursor: pointer; text-decoration: none; color: inherit; }
+.m-card.link:hover, .m-card.is-hover { border-color: var(--border-strong); box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.m-card .meta { font-size: 13px; color: var(--text-subtle); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.m-table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 20px; }
+.m-table th { text-align: left; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-subtle); padding: 10px 12px; border-bottom: 1px solid var(--border-strong); white-space: nowrap; }
+.m-table th button { all: unset; cursor: pointer; display: inline-flex; gap: 4px; align-items: center; border-radius: 4px; }
+.m-table th button:focus-visible { box-shadow: var(--focus-ring); }
+.m-table td { padding: 12px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.m-table tbody tr:hover { background: var(--surface-2); }
+.m-table tr[aria-selected="true"] { background: var(--surface-3); }
+.m-pag { display: flex; gap: 4px; align-items: center; flex-wrap: wrap; }
+.m-pag a, .m-pag span { min-width: 36px; height: 36px; display: inline-grid; place-items: center; border-radius: var(--radius-md); font-size: 14px; color: var(--text-muted); text-decoration: none; font-variant-numeric: tabular-nums; padding: 0 8px; }
+.m-pag a:hover { background: var(--surface-2); color: var(--text); }
+.m-pag a[aria-current="page"] { background: var(--primary); color: var(--on-primary); font-weight: 600; }
+.m-pag a[aria-disabled="true"] { opacity: 0.45; pointer-events: none; }
+.m-crumb ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; padding: 0; margin: 0; font-size: 14px; }
+.m-crumb a { color: var(--text-muted); text-decoration: none; border-radius: 4px; }
+.m-crumb a:hover { color: var(--text); text-decoration: underline; }
+.m-crumb li { display: inline-flex; gap: 6px; align-items: center; color: var(--text-subtle); }
+.m-crumb [aria-current="page"] { color: var(--text); font-weight: 500; }
+.m-avatar { width: 40px; height: 40px; border-radius: var(--radius-full); display: inline-grid; place-items: center; font-weight: 600; font-size: 14px; background: var(--gradient-brand); color: var(--on-primary); position: relative; flex: none; }
+.m-avatar.sm { width: 28px; height: 28px; font-size: 11px; } .m-avatar.lg { width: 56px; height: 56px; font-size: 18px; }
+.m-avatar.plain { background: var(--surface-3); color: var(--text); }
+.m-avatar .dot { position: absolute; right: 0; bottom: 0; width: 11px; height: 11px; border-radius: 50%; background: var(--success); border: 2px solid var(--surface); }
+.avatar-stack { display: flex; } .avatar-stack .m-avatar { border: 2px solid var(--surface); margin-left: -10px; } .avatar-stack .m-avatar:first-child { margin-left: 0; }
+
+/* Progress, skeleton, empty, upload */
+.m-progress { height: 8px; border-radius: 4px; background: var(--surface-3); overflow: hidden; }
+.m-progress > div { height: 100%; border-radius: 4px; background: var(--primary); transition: width var(--duration-slow) var(--ease-enter); }
+.m-progress.indet > div { width: 40%; animation: indet 1.4s var(--ease-enter) infinite; }
+@keyframes indet { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+.m-progress.err > div { background: var(--danger); }
+.ring { width: 48px; height: 48px; }
+.skel { background: var(--surface-3); border-radius: var(--radius-sm); position: relative; overflow: hidden; }
+.skel::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent); animation: shimmer 1.6s infinite; }
+@keyframes shimmer { to { transform: translateX(100%); } }
+.m-empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; padding: 40px 24px; border: 1px dashed var(--border-strong); border-radius: var(--radius-lg); }
+.m-empty .ico { width: 48px; height: 48px; border-radius: var(--radius-md); background: var(--surface-2); display: grid; place-items: center; color: var(--accent); }
+.m-empty p { max-width: 40ch; color: var(--text-muted); font-size: 14px; line-height: 20px; }
+.m-drop { display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; padding: 28px 20px; border: 1.5px dashed var(--border-strong); border-radius: var(--radius-lg); background: var(--surface); cursor: pointer; transition: background-color var(--duration-fast), border-color var(--duration-fast); }
+.m-drop:hover, .m-drop.drag { border-color: var(--primary); background: var(--surface-2); }
+.m-drop:focus-visible { box-shadow: var(--focus-ring); }
+.m-drop.error { border-color: var(--danger); }
+.m-drop .ico { color: var(--accent); }
+.m-drop b { font-weight: 600; font-size: 15px; }
+.m-drop small { color: var(--text-subtle); font-size: 13px; }
+.file-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 14px; }
+.file-row .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Recorder and player */
+.m-rec { display: flex; flex-direction: column; gap: 14px; padding: 20px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.rec-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.rec-btn { width: 56px; height: 56px; border-radius: 50%; border: 0; background: var(--danger-solid); color: var(--on-danger); display: grid; place-items: center; cursor: pointer; flex: none; transition: transform var(--duration-fast) var(--ease-enter); }
+.rec-btn:hover { transform: scale(1.04); }
+.rec-btn .lucide { width: 24px; height: 24px; }
+.rec-btn.live { animation: pulse 1.6s var(--ease-enter) infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(200, 50, 62, 0.5); } 100% { box-shadow: 0 0 0 16px rgba(200, 50, 62, 0); } }
+.rec-time { font-family: var(--font-mono); font-size: 20px; font-variant-numeric: tabular-nums; }
+.meter { display: flex; gap: 3px; align-items: center; height: 32px; flex: 1; min-width: 120px; }
+.meter i { flex: 1; max-width: 6px; border-radius: 2px; background: var(--border-strong); height: 4px; transition: height 80ms linear; }
+.meter.live i { background: var(--accent); }
+.phrase { padding: 12px 14px; border-radius: var(--radius-md); background: var(--surface-2); font-size: 16px; line-height: 24px; border-left: 3px solid var(--accent); }
+.m-player { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.m-player + .m-player { margin-top: 12px; }
+.play { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; cursor: pointer; transition: background-color var(--duration-fast); }
+.play:hover { background: var(--primary-hover); }
+.play .lucide { width: 18px; height: 18px; }
+.wave { display: block; width: 100%; height: 48px; cursor: pointer; border-radius: 6px; }
+.wave:focus-visible { box-shadow: var(--focus-ring); }
+.p-meta { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.p-meta .t { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.p-time { font-family: var(--font-mono); font-size: 12px; color: var(--text-subtle); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.p-tools { display: flex; gap: 4px; }
+
+/* Brand */
+.tagline-list { display: flex; flex-direction: column; gap: 0; counter-reset: t; }
+.tagline-list li { list-style: none; display: grid; grid-template-columns: 32px minmax(0, 1fr); gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+.tagline-list li::before { counter-increment: t; content: counter(t); font-family: var(--font-mono); font-size: 13px; color: var(--text-subtle); padding-top: 6px; }
+.tagline-list b { font-family: var(--font-display); font-size: 24px; line-height: 32px; font-weight: 600; display: block; }
+.tagline-list span { font-size: 14px; color: var(--text-muted); }
+.tagline-list li.rec b { background: var(--gradient-brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.story { font-size: 18px; line-height: 30px; max-width: 64ch; color: var(--text); }
+@media (max-width: 767.98px) { .tagline-list b { font-size: 20px; line-height: 28px; } .story { font-size: 16px; line-height: 26px; } }
+footer.foot { border-top: 1px solid var(--border); padding-block: 24px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); color: var(--text-subtle); font-size: 13px; text-align: center; }
+</style>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Mimix <small>Design system v1.0</small></div>
+    <div class="m-seg" role="radiogroup" aria-label="Theme">
+      <button type="button" role="radio" data-theme-set="system" aria-checked="true">@@I:monitor@@<span>System</span></button>
+      <button type="button" role="radio" data-theme-set="dark" aria-checked="false">@@I:moon@@<span>Dark</span></button>
+      <button type="button" role="radio" data-theme-set="light" aria-checked="false">@@I:sun@@<span>Light</span></button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Sections">
+    <div class="overline">Contents</div>
+    <a href="#palette">Palette</a>
+    <a href="#before-after">Before and after</a>
+    <a href="#contrast">Contrast table</a>
+    <a href="#type">Typography</a>
+    <a href="#scales">Space, radius, depth</a>
+    <a href="#motion">Motion and layers</a>
+    <a href="#icons">Icons</a>
+    <a href="#layout">Grid and media</a>
+    <a href="#states">State rules</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#forms">Form controls</a>
+    <a href="#navigation">Navigation</a>
+    <a href="#overlays">Overlays</a>
+    <a href="#data">Data display</a>
+    <a href="#feedback">Feedback</a>
+    <a href="#audio">Audio</a>
+    <a href="#brand">Taglines and story</a>
+  </nav>
+
+  <main id="main">
+    <div class="hero">
+      <div>
+        <div class="overline">Phase 1 · Brand and design system</div>
+        <h1>Two voices in, one voice out.</h1>
+        <p>Mimix tokens, scales and components, built on the Holst teal palette. Every colour pair on this page is checked against WCAG 2.2 AA in the browser as you read it. Switch themes at the top right.</p>
+      </div>
+      <canvas class="hero-wave" id="heroWave" aria-hidden="true"></canvas>
+    </div>
+
+    <!-- 1. Palette -->
+    <section id="palette">
+      <div class="sec-head">
+        <div class="overline">1 · Palette</div>
+        <h2>Seven colours from the photo</h2>
+        <p>The Holst photo gives a single teal ramp from abyss to mist. Mimix uses it for every surface, text and brand role, and adds four new hues for status (success, warning, danger and a destructive fill) because the photo has no warm colours.</p>
+      </div>
+      <div class="photo-strip" id="photoStrip"></div>
+      <div class="roles-grid">
+        <div class="panel"><h3>Dark theme roles (default)</h3><div class="scroll-x"><table class="role-table" id="rolesDark"></table></div></div>
+        <div class="panel"><h3>Light theme roles</h3><div class="scroll-x"><table class="role-table" id="rolesLight"></table></div></div>
+      </div>
+    </section>
+
+    <!-- Before / after -->
+    <section id="before-after">
+      <div class="sec-head">
+        <div class="overline">1b · Contrast fixes</div>
+        <h2>Before and after</h2>
+        <p>Before: the photo colours mapped straight onto the roles. After: the shipped tokens. Each row is the same text role drawn on the same surface role, with its measured ratio.</p>
+      </div>
+      <div class="ba" id="baSheet"></div>
+    </section>
+
+    <!-- Contrast table -->
+    <section id="contrast">
+      <div class="sec-head">
+        <div class="overline">2 · WCAG 2.2 AA</div>
+        <h2>Contrast table</h2>
+        <p>Text needs 4.5:1 (SC 1.4.3). Input borders, focus rings and other UI parts need 3:1 (SC 1.4.11). The decorative <code>--border</code> is exempt. Light <code>--accent</code> is for icons and graphics only. Ratios below are recomputed live from the CSS on this page.</p>
+      </div>
+      <div class="demo">
+        <div class="m-seg" role="radiogroup" aria-label="Contrast table theme" id="ctTheme">
+          <button type="button" role="radio" aria-checked="true" data-v="dark">Dark</button>
+          <button type="button" role="radio" aria-checked="false" data-v="light">Light</button>
+        </div>
+        <span class="note" id="ctSummary" aria-live="polite"></span>
+      </div>
+      <div class="panel scroll-x" style="padding: 8px 16px;"><table class="role-table" id="ctTable"></table></div>
+    </section>
+
+    <!-- Typography -->
+    <section id="type">
+      <div class="sec-head">
+        <div class="overline">3 · Typography</div>
+        <h2>Sora, Figtree and JetBrains Mono</h2>
+        <p>Sora 600 and 700 for display and headings, Figtree 400, 500 and 600 for interface and body, JetBrains Mono 400 and 500 for code and timecodes. Headings 36px and up use −0.02em tracking. Under 768px, headings drop two steps.</p>
+      </div>
+      <div class="panel" id="typeScale"></div>
+      <div class="grid3">
+        <div class="panel"><div class="overline">Overline · 12/16 · 600 · +0.08em</div><p class="muted">Labels above sections and table headers.</p></div>
+        <div class="panel"><p style="font: 400 16px/24px var(--font-body);">Body · Figtree 400 · 16/24. Running text stays near 65 characters per line.</p></div>
+        <div class="panel"><p style="font: 400 13px/20px var(--font-mono);">mono · 13/20 · 00:01:24.350<br>POST /v1/speech/stream</p></div>
+      </div>
+    </section>
+
+    <!-- Scales -->
+    <section id="scales">
+      <div class="sec-head">
+        <div class="overline">3b · Scales</div>
+        <h2>Space, radius, elevation, blur and gradients</h2>
+        <p>Spacing runs on a 4px base. Radius follows role: 6px chips, 10px buttons and inputs, 16px cards, 24px panels and modals, full for pills and avatars.</p>
+      </div>
+      <div class="grid2">
+        <div class="panel"><h3>Spacing</h3><div id="spaceScale" style="display:flex;flex-direction:column;gap:8px;"></div></div>
+        <div class="panel" style="gap:24px;">
+          <div style="display:flex;flex-direction:column;gap:12px;"><h3>Radius</h3><div class="rad-grid" id="radScale"></div></div>
+          <div style="display:flex;flex-direction:column;gap:12px;"><h3>Elevation</h3><div class="elev-grid">
+            <div class="elev-box" style="box-shadow:var(--shadow-sm)">shadow-sm</div>
+            <div class="elev-box" style="box-shadow:var(--shadow-md)">shadow-md</div>
+            <div class="elev-box" style="box-shadow:var(--shadow-lg)">shadow-lg</div>
+            <div class="elev-box" style="box-shadow:var(--glow)">glow</div>
+          </div></div>
+        </div>
+      </div>
+      <div class="grid3">
+        <div class="grad-box" style="background:var(--gradient-brand);color:var(--on-primary)">gradient-brand · logo, waveforms, borders, glows. Never behind body text.</div>
+        <div class="grad-box" style="background:var(--gradient-cta);color:var(--on-primary)">gradient-cta · hero buttons only</div>
+        <div class="panel" style="gap:8px;"><h3>Blur</h3><p class="spec">--blur-sm   4px   tooltips over media
+--blur-md  12px   sticky header (saturate 180%)
+--blur-lg  24px   modal backdrop over video</p></div>
+      </div>
+      <pre class="spec" id="scaleSpec"></pre>
+    </section>
+
+    <!-- Motion and z -->
+    <section id="motion">
+      <div class="sec-head">
+        <div class="overline">3c · Motion and layers</div>
+        <h2>Three durations, two curves</h2>
+        <p>150ms for hover and press, 250ms for menus and toasts, 400ms for modals and reveals. Enter with cubic-bezier(0.22, 1, 0.36, 1), exit with cubic-bezier(0.4, 0, 1, 1). With reduced motion on, only opacity fades of 150ms or less remain, loops play once, and spinners become a still icon with “Loading…”.</p>
+      </div>
+      <div class="grid2">
+        <div class="panel motion-demo">
+          <div class="motion-track" data-d="150ms"><div class="motion-dot"></div></div>
+          <div class="motion-track" data-d="250ms"><div class="motion-dot"></div></div>
+          <div class="motion-track" data-d="400ms"><div class="motion-dot"></div></div>
+          <div class="demo"><button class="m-btn secondary sm" id="motionGo" type="button">@@I:play@@Play 150 / 250 / 400ms</button><span class="note" id="motionNote"></span></div>
+        </div>
+        <div class="panel">
+          <div class="z-stack" aria-label="Z-index layers">
+            <div style="left:0;top:0;z-index:1">header · 100</div>
+            <div style="left:7%;top:22px;z-index:2">dropdown · 200</div>
+            <div style="left:14%;top:44px;z-index:3">drawer · 300</div>
+            <div style="left:21%;top:66px;z-index:4">modal · 400</div>
+            <div style="left:28%;top:88px;z-index:5">toast · 500</div>
+            <div style="left:35%;top:110px;z-index:6;border-color:var(--accent)">tooltip · 600</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Icons -->
+    <section id="icons">
+      <div class="sec-head">
+        <div class="overline">4 · Icons</div>
+        <h2>Lucide, 1.75px stroke</h2>
+        <p>One open-source set, Lucide 1.57.0 (ISC licence), drawn at 16, 20 and 24px with round caps and joins. Icons take <code>currentColor</code>. A decorative icon gets <code>aria-hidden="true"</code>; an icon-only button gets an <code>aria-label</code>.</p>
+      </div>
+      <div class="icon-grid" id="iconGrid"></div>
+    </section>
+
+    <!-- Layout -->
+    <section id="layout">
+      <div class="sec-head">
+        <div class="overline">5 · Grid and media</div>
+        <h2>Breakpoints, containers and media</h2>
+        <p>Mobile first. Content sits in a 1200px container, full-bleed bands stop at 1440px. Gutters are 16px on phones, 24px on tablets and 32px on desktop. The grid is 4 columns under 768px, 8 to 1023px and 12 from 1024px, with 16, 24 and 24px gaps.</p>
+      </div>
+      <div class="panel">
+        <div class="bp-bar" id="bpBar" aria-hidden="true"></div>
+        <div class="scroll-x"><table class="role-table">
+          <thead><tr><th>Name</th><th>Min width</th><th>Columns</th><th>Gutter</th><th>Layout changes</th></tr></thead>
+          <tbody>
+            <tr><td>base</td><td>0</td><td>4</td><td>16px</td><td>One column; header collapses to logo plus menu button; app uses bottom bar</td></tr>
+            <tr><td>sm</td><td>640px</td><td>4</td><td>16px</td><td>Cards go two across</td></tr>
+            <tr><td>md</td><td>768px</td><td>8</td><td>24px</td><td>Headings return to full size; settings panels sit beside editors</td></tr>
+            <tr><td>lg</td><td>1024px</td><td>12</td><td>32px</td><td>Full nav and mega-menu; mobile drawer is removed; app sidebar shows</td></tr>
+            <tr><td>xl</td><td>1280px</td><td>12</td><td>32px</td><td>Three-pane layouts (library filters, list, preview)</td></tr>
+            <tr><td>2xl</td><td>1536px</td><td>12</td><td>32px</td><td>Container stops growing at 1200px; bands at 1440px</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+      <div class="panel">
+        <h3>Media rules</h3>
+        <div class="ratio-grid">
+          <div class="ratio-box" style="aspect-ratio:16/9">16:9 · video, hero</div>
+          <div class="ratio-box" style="aspect-ratio:4/3">4:3 · use-case cards</div>
+          <div class="ratio-box" style="aspect-ratio:1/1">1:1 · voice avatars</div>
+          <div class="ratio-box" style="aspect-ratio:1.91/1">1.91:1 · Open Graph</div>
+        </div>
+        <pre class="spec">img, video { max-width: 100%; height: auto; }
+.cover   { object-fit: cover; object-position: center; }   photos, thumbnails
+.contain { object-fit: contain; }                            logos, diagrams
+Below the fold: loading="lazy" decoding="async". The LCP image: fetchpriority="high", never lazy.
+Always set width and height (or aspect-ratio) so nothing shifts (CLS ≤ 0.1).
+Formats: AVIF, then WebP, via next/image. Audio previews: preload="none" until a play press.</pre>
+      </div>
+    </section>
+
+    <!-- State rules -->
+    <section id="states">
+      <div class="sec-head">
+        <div class="overline">6 · Components</div>
+        <h2>State rules shared by every component</h2>
+        <p>Each component below shows its states side by side. These rules apply everywhere unless a component says otherwise.</p>
+      </div>
+      <div class="panel scroll-x">
+        <table class="role-table">
+          <thead><tr><th>State</th><th>Visual change</th><th>Behaviour</th></tr></thead>
+          <tbody>
+            <tr><td>Default</td><td>Token colours as listed per component</td><td>Native element first (button, input, a)</td></tr>
+            <tr><td>Hover</td><td>One step up the surface ramp, or the -hover token; cards lift 2px</td><td>150ms, enter curve; only on pointer devices (<code>@media (hover: hover)</code>)</td></tr>
+            <tr><td>Focus-visible</td><td><code>--focus-ring</code>: 2px page-colour gap, then 2px focus colour</td><td>Keyboard only; never removed; 3:1 against every surface</td></tr>
+            <tr><td>Active</td><td>-active token, plus 1px downward shift on buttons</td><td>150ms</td></tr>
+            <tr><td>Disabled</td><td>Opacity 0.45, <code>cursor: not-allowed</code></td><td>Use <code>disabled</code> on controls; <code>aria-disabled</code> when it must stay focusable to explain why</td></tr>
+            <tr><td>Loading</td><td>Spinner (loader-circle, 800ms per turn) replaces the leading icon; label stays</td><td><code>aria-busy="true"</code>; clicks ignored; width does not change</td></tr>
+            <tr><td>Error</td><td><code>--danger</code> border and message with an icon below the field</td><td><code>aria-invalid="true"</code> plus <code>aria-describedby</code> pointing at the message; message says how to fix it</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Buttons -->
+    <section id="buttons">
+      <div class="sec-head"><h2>Buttons</h2><p>Primary for the one main action on a screen. Secondary for alternatives. Ghost for toolbars. Destructive only for actions that delete or remove.</p></div>
+      <div class="panel scroll-x"><div class="states" id="btnStates"></div></div>
+      <div class="panel">
+        <h3>Sizes and icon buttons</h3>
+        <div class="demo">
+          <button class="m-btn primary sm" type="button">@@I:wand-sparkles@@Generate</button>
+          <button class="m-btn primary" type="button">@@I:wand-sparkles@@Generate</button>
+          <button class="m-btn primary lg" type="button">@@I:wand-sparkles@@Generate</button>
+          <button class="m-btn secondary icon sm" type="button" aria-label="Copy">@@I:copy@@</button>
+          <button class="m-btn secondary icon" type="button" aria-label="Download">@@I:download@@</button>
+          <button class="m-btn ghost icon lg" type="button" aria-label="Settings">@@I:settings@@</button>
+        </div>
+        <pre class="spec">sm  32px high · 0 12px · 13/18 600 · icon 16 · gap 6
+md  40px high · 0 16px · 14/20 600 · icon 18 · gap 8   (default)
+lg  48px high · 0 20px · 16/24 600 · icon 20 · gap 8
+icon  square at each height · aria-label required
+radius 10px · touch devices: min 44 × 44px
+primary     bg --primary → hover --primary-hover → active --primary-active · text --on-primary
+secondary   bg --surface-2, 1px --border-strong → hover/active --surface-3 · text --text
+ghost       transparent → hover --surface-2 → active --surface-3 · text --text
+destructive bg --danger-solid → hover/active --danger-solid-hover · text --on-danger
+Buttons have no error state; errors show on the field or in a toast.</pre>
+      </div>
+    </section>
+
+    <!-- Forms -->
+    <section id="forms">
+      <div class="sec-head"><h2>Form controls</h2><p>Labels sit above fields and are always visible. Inputs use 16px text so phones do not zoom on focus.</p></div>
+      <div class="panel scroll-x"><div class="states" id="inputStates" style="--cols:6"></div></div>
+      <div class="grid2">
+        <div class="panel">
+          <div class="field">
+            <label for="f-script">Script</label>
+            <textarea class="m-textarea" id="f-script" maxlength="5000" aria-describedby="f-script-count">Two voices go in. One new voice comes out.</textarea>
+            <div class="count" id="f-script-count" aria-live="polite"></div>
+          </div>
+          <div class="field">
+            <label for="f-lang">Language</label>
+            <select class="m-select" id="f-lang"><option>English (US)</option><option>English (UK)</option><option>Bahasa Melayu</option><option>Español</option><option>Deutsch</option></select>
+          </div>
+          <div class="field">
+            <label for="f-email">Work email</label>
+            <input class="m-input" id="f-email" type="email" placeholder="you@studio.com" aria-describedby="f-email-err" autocomplete="email">
+            <div class="err" id="f-email-err" hidden>@@I:circle-x@@<span>Enter an email address with an @, like name@studio.com.</span></div>
+          </div>
+          <pre class="spec">input / select  40px high · 0 12px · 16/24 · radius 10 · bg --surface-2 · 1px --border-strong
+textarea        min 112px · 10px 12px · resize vertical · live count "154 / 5,000"
+hover border --text-muted · focus border --focus + --focus-ring · error border --danger
+placeholder --text-subtle (4.5:1) · label 14/20 500 · help 13/18 --text-subtle</pre>
+        </div>
+        <div class="panel">
+          <div class="field">
+            <label id="cb-label" for="cb-input">Voice</label>
+            <div class="relative" id="cb">
+              <div class="input-wrap">
+                <span class="lead">@@I:search@@</span>
+                <input class="m-input with-lead" id="cb-input" role="combobox" aria-expanded="false" aria-controls="cb-list" aria-autocomplete="list" autocomplete="off" placeholder="Search voices">
+                <span class="trail">@@I:chevron-down@@</span>
+              </div>
+              <div class="pop" id="cb-list" role="listbox" aria-labelledby="cb-label" hidden></div>
+            </div>
+            <div class="help">Type to filter. Arrow keys move, Enter picks, Esc closes.</div>
+          </div>
+          <div class="field">
+            <div class="slider-head"><label for="s-stab">Stability</label><output id="s-stab-out" for="s-stab">50%</output></div>
+            <input class="m-slider" id="s-stab" type="range" min="0" max="100" value="50" step="1" aria-describedby="s-stab-ends">
+            <div class="slider-ends" id="s-stab-ends"><span>More expressive</span><span>More consistent</span></div>
+          </div>
+          <div class="field">
+            <div class="slider-head"><label for="s-dis">Style (disabled on this model)</label><output for="s-dis">0%</output></div>
+            <input class="m-slider" id="s-dis" type="range" min="0" max="100" value="0" disabled>
+          </div>
+          <div class="demo" style="gap:24px;">
+            <label class="m-toggle"><input type="checkbox" role="switch" id="t1" checked><span class="track"></span><span>Watermark</span></label>
+            <label class="m-toggle"><input type="checkbox" role="switch" id="t2"><span class="track"></span><span>Auto-tag</span></label>
+            <label class="m-toggle"><input type="checkbox" role="switch" id="t3" disabled><span class="track"></span><span>Disabled</span></label>
+          </div>
+          <div class="demo" style="gap:24px;">
+            <label class="m-check"><input type="checkbox" id="c1" checked><span class="box">@@I:check@@</span><span>Commercial use</span></label>
+            <label class="m-check"><input type="checkbox" id="c2"><span class="box">@@I:check@@</span><span>Public</span></label>
+            <label class="m-check"><input type="checkbox" id="c3" aria-invalid="true" aria-describedby="c3-err"><span class="box">@@I:check@@</span><span>I have consent</span></label>
+            <label class="m-check"><input type="checkbox" id="c4" disabled><span class="box">@@I:check@@</span><span>Disabled</span></label>
+          </div>
+          <div class="err" id="c3-err">@@I:circle-x@@<span>Confirm you have the speaker's consent to continue.</span></div>
+          <fieldset style="border:0;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;">
+            <legend class="lbl" style="margin-bottom:10px;">Output format</legend>
+            <div class="demo" style="gap:24px;">
+              <label class="m-radio"><input type="radio" name="fmt" id="r1" checked><span class="box"></span><span>MP3 128 kbps</span></label>
+              <label class="m-radio"><input type="radio" name="fmt" id="r2"><span class="box"></span><span>MP3 192 kbps</span></label>
+              <label class="m-radio"><input type="radio" name="fmt" id="r3"><span class="box"></span><span>WAV 44.1 kHz</span></label>
+              <label class="m-radio"><input type="radio" name="fmt" id="r4" disabled><span class="box"></span><span>FLAC (Pro)</span></label>
+            </div>
+          </fieldset>
+          <pre class="spec">combobox  input + listbox · option 36px min · active option --surface-3 · max list 264px
+slider    track 4px (--primary fill / --border-strong rest) · thumb 20px, 4px --primary ring · step 1
+toggle    40 × 24 track · 16px knob · off --surface-3 / on --primary · role="switch"
+checkbox  20px · radius 5 · 1.5px --border-strong · checked --primary + 14px check
+radio     20px circle · checked 10px --primary dot · group in fieldset + legend</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation -->
+    <section id="navigation">
+      <div class="sec-head"><h2>Tabs, segmented control, breadcrumb and pagination</h2><p>Tabs switch panels in place. A segmented control switches a setting. Arrow keys move between items in both.</p></div>
+      <div class="grid2">
+        <div class="panel">
+          <div class="m-tabs" id="tabsDemo">
+            <div role="tablist" aria-label="Voice sections">
+              <button class="m-tab" role="tab" id="tab-a" aria-selected="true" aria-controls="tp-a" tabindex="0">My voices</button>
+              <button class="m-tab" role="tab" id="tab-b" aria-selected="false" aria-controls="tp-b" tabindex="-1">Library</button>
+              <button class="m-tab" role="tab" id="tab-c" aria-selected="false" aria-controls="tp-c" tabindex="-1">Mixes</button>
+              <button class="m-tab" role="tab" id="tab-d" aria-selected="false" aria-controls="tp-d" tabindex="-1" disabled>Shared</button>
+            </div>
+            <div role="tabpanel" id="tp-a" aria-labelledby="tab-a" tabindex="0">3 voices: Nadia (clone), Arlo (designed), Nadia × Arlo (mix, 60 / 40).</div>
+            <div role="tabpanel" id="tp-b" aria-labelledby="tab-b" tabindex="0" hidden>1,240 voices ready to use, filtered to English.</div>
+            <div role="tabpanel" id="tp-c" aria-labelledby="tab-c" tabindex="0" hidden>1 mix. Its sources and weights are saved with it.</div>
+            <div role="tabpanel" id="tp-d" aria-labelledby="tab-d" tabindex="0" hidden></div>
+          </div>
+          <pre class="spec">tab 14/20 500 · 10px 12px · --text-muted → selected --text + 2px --primary underline
+roving tabindex · ←/→ move and select · Home/End · disabled tabs skipped</pre>
+        </div>
+        <div class="panel">
+          <div class="m-seg" role="radiogroup" aria-label="Mix mode" id="segDemo">
+            <button type="button" role="radio" aria-checked="true" tabindex="0">Two voices</button>
+            <button type="button" role="radio" aria-checked="false" tabindex="-1">Three voices</button>
+          </div>
+          <nav class="m-crumb" aria-label="Breadcrumb"><ol>
+            <li><a href="#navigation">Voices</a>@@I:chevron-right@@</li>
+            <li><a href="#navigation">Mixes</a>@@I:chevron-right@@</li>
+            <li><span aria-current="page">Nadia × Arlo</span></li>
+          </ol></nav>
+          <nav class="m-pag" aria-label="Pagination">
+            <a href="#navigation" aria-disabled="true" aria-label="Previous page">@@I:chevron-left@@</a>
+            <a href="#navigation" aria-current="page">1</a><a href="#navigation">2</a><a href="#navigation">3</a><span>…</span><a href="#navigation">12</a>
+            <a href="#navigation" aria-label="Next page">@@I:chevron-right@@</a>
+          </nav>
+          <pre class="spec">segmented  track --surface-2 · 3px inset · item 30px min · selected --surface + shadow-sm
+breadcrumb 14px · separators chevron 20 aria-hidden · last item aria-current="page"
+pagination 36 × 36 · current --primary / --on-primary · disabled 0.45</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overlays -->
+    <section id="overlays">
+      <div class="sec-head"><h2>Tooltip, dropdown menu, modal, drawer and toast</h2><p>Overlays trap focus when modal, close on Esc, and return focus to the control that opened them.</p></div>
+      <div class="panel">
+        <div class="demo">
+          <span class="tip-host"><button class="m-btn secondary icon" type="button" aria-label="Regenerate" aria-describedby="tip1">@@I:wand-sparkles@@</button><span class="tip" role="tooltip" id="tip1">Regenerate (R)</span></span>
+          <div class="relative" id="menuHost">
+            <button class="m-btn secondary" type="button" id="menuBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="menuList">Options @@I:chevron-down@@</button>
+            <div class="pop" role="menu" id="menuList" aria-labelledby="menuBtn" hidden style="min-width:220px;">
+              <div class="opt" role="menuitem" tabindex="-1">@@I:download@@Download MP3</div>
+              <div class="opt" role="menuitem" tabindex="-1">@@I:copy@@Duplicate voice</div>
+              <div class="opt" role="menuitem" tabindex="-1" aria-disabled="true">@@I:blend@@Mix (needs a licence)</div>
+              <div class="sep" role="separator"></div>
+              <div class="opt danger" role="menuitem" tabindex="-1">@@I:trash-2@@Delete voice</div>
+            </div>
+          </div>
+          <button class="m-btn danger" type="button" id="openModal">@@I:trash-2@@Delete voice</button>
+          <button class="m-btn secondary" type="button" id="openDrawer">@@I:sliders-horizontal@@Voice settings</button>
+          <button class="m-btn ghost" type="button" id="toastOk">Show success toast</button>
+          <button class="m-btn ghost" type="button" id="toastErr">Show error toast</button>
+        </div>
+        <div class="grid2">
+          <div class="m-toast static" role="status"><span class="t-ok">@@I:circle-check@@</span><div><b>Voice saved</b><span class="muted">Nadia × Arlo is in My voices.</span></div><button type="button" aria-label="Dismiss">@@I:x@@</button></div>
+          <div class="m-toast static" role="status"><span class="t-warn">@@I:triangle-alert@@</span><div><b>12% of credits left</b><span class="muted">About 4 minutes of speech remain this month.</span></div><button type="button" aria-label="Dismiss">@@I:x@@</button></div>
+          <div class="m-toast static" role="status"><span class="t-err">@@I:circle-x@@</span><div><b>Upload failed</b><span class="muted">The file is 62 MB. Upload a file under 50 MB.</span></div><button type="button" aria-label="Dismiss">@@I:x@@</button></div>
+          <div class="m-toast static" role="status"><span class="t-info">@@I:info@@</span><div><b>Dubbing started</b><span class="muted">We'll let you know when all 3 languages are ready.</span></div><button type="button" aria-label="Dismiss">@@I:x@@</button></div>
+        </div>
+        <pre class="spec">tooltip   --text bg / --bg text · 12/16 500 · 6px 8px · radius 6 · 400ms show delay on hover, 0 on focus · Esc hides
+dropdown  --surface · 1px --border-strong · radius 10 · 6px inset · shadow-lg · 250ms enter · ↑/↓ Home End, Esc returns focus
+modal     max 480px · --surface · radius 24 · 24px pad · overlay --overlay · 400ms enter · focus trap · Esc closes · scroll lock
+drawer    right side · min(400px, 92vw) · slides 400ms · same trap and Esc rules · scroll lock
+toast     bottom right · max 360px · 250ms · role="status" (errors role="alert") · 6s auto-dismiss, paused on hover and focus</pre>
+      </div>
+    </section>
+
+    <!-- Data display -->
+    <section id="data">
+      <div class="sec-head"><h2>Badge, card, table and avatar</h2><p>Cards group one object. Tables carry many objects with the same fields.</p></div>
+      <div class="grid3">
+        <a class="m-card link" href="#data">
+          <div class="demo" style="justify-content:space-between;"><span class="m-avatar">NA</span><span class="m-badge brand">@@I:blend@@Mix</span></div>
+          <h3>Nadia × Arlo</h3>
+          <p class="muted" style="font-size:14px;line-height:20px;">Warm narrator with a bright edge. 60% Nadia, 40% Arlo.</p>
+          <div class="meta"><span class="m-badge ok">@@I:circle-check@@Consent verified</span><span>English · Adult</span></div>
+        </a>
+        <div class="m-card is-hover">
+          <div class="demo" style="justify-content:space-between;"><span class="m-avatar plain">AR</span><span class="m-badge">Designed</span></div>
+          <h3>Arlo</h3>
+          <p class="muted" style="font-size:14px;line-height:20px;">Calm, low and steady. Made from a text description.</p>
+          <div class="meta"><span class="m-badge warn">@@I:triangle-alert@@In review</span><span>Hover state</span></div>
+        </div>
+        <div class="m-card">
+          <div class="demo" style="justify-content:space-between;"><div class="skel" style="width:40px;height:40px;border-radius:50%"></div><div class="skel" style="width:56px;height:22px;border-radius:999px"></div></div>
+          <div class="skel" style="width:60%;height:20px"></div>
+          <div class="skel" style="width:100%;height:14px"></div>
+          <div class="skel" style="width:80%;height:14px"></div>
+          <span class="sr-only">Loading voice</span>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="demo"><span class="m-badge">Default</span><span class="m-badge brand">Brand</span><span class="m-badge ok">@@I:circle-check@@Ready</span><span class="m-badge warn">@@I:triangle-alert@@Over 80%</span><span class="m-badge bad">@@I:circle-x@@Taken down</span>
+          <span class="m-avatar sm">LE</span><span class="m-avatar">MX</span><span class="m-avatar lg">NA<span class="dot" aria-label="Online"></span></span>
+          <span class="avatar-stack"><span class="m-avatar sm">NA</span><span class="m-avatar sm plain">AR</span><span class="m-avatar sm">+3</span></span>
+        </div>
+        <div class="scroll-x">
+          <table class="m-table" id="histTable">
+            <caption class="sr-only">Generation history</caption>
+            <thead><tr><th scope="col"><button type="button" data-sort="0" aria-label="Sort by title">Title @@I:chevron-down@@</button></th><th scope="col">Voice</th><th scope="col"><button type="button" data-sort="2" aria-label="Sort by length">Length @@I:chevron-down@@</button></th><th scope="col"><button type="button" data-sort="3" aria-label="Sort by credits">Credits @@I:chevron-down@@</button></th><th scope="col">Status</th></tr></thead>
+            <tbody>
+              <tr><td>Podcast intro, ep. 14</td><td>Nadia × Arlo</td><td>0:42</td><td>640</td><td><span class="m-badge ok">Ready</span></td></tr>
+              <tr aria-selected="true"><td>Chapter 3 · The harbour</td><td>Nadia</td><td>12:08</td><td>11,520</td><td><span class="m-badge">Selected</span></td></tr>
+              <tr><td>Product walkthrough (BM)</td><td>Arlo</td><td>2:15</td><td>2,030</td><td><span class="m-badge warn">Queued</span></td></tr>
+              <tr><td>Game NPC lines, pack B</td><td>Tide</td><td>5:51</td><td>5,400</td><td><span class="m-badge bad">Failed</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <pre class="spec">badge   22px · 0 8px · 12/16 600 · pill · status badges always carry an icon, never colour alone
+card    --surface · 1px --border · radius 16 · 20px pad · link cards: hover --border-strong + shadow-md + lift 2px
+table   header 12px caps --text-subtle, 1px --border-strong · rows 12px pad · hover --surface-2 · selected --surface-3
+        sortable headers are buttons with aria-sort on the th · numbers tabular, right-aligned in production
+avatar  28 / 40 / 56 · initials on --gradient-brand or --surface-3 · status dot 11px with 2px ring</pre>
+      </div>
+    </section>
+
+    <!-- Feedback -->
+    <section id="feedback">
+      <div class="sec-head"><h2>Progress, skeleton, empty state and upload</h2><p>Long jobs show real progress. Short waits show skeletons shaped like the content.</p></div>
+      <div class="grid2">
+        <div class="panel">
+          <div class="field"><div class="slider-head"><span class="lbl" id="pg1-l">Dubbing · Spanish</span><output class="mono" id="pg1-v">64%</output></div><div class="m-progress" role="progressbar" aria-labelledby="pg1-l" aria-valuenow="64" aria-valuemin="0" aria-valuemax="100" id="pg1"><div style="width:64%"></div></div></div>
+          <div class="field"><span class="lbl" id="pg2-l">Preparing samples</span><div class="m-progress indet" role="progressbar" aria-labelledby="pg2-l" aria-valuetext="Working"><div></div></div></div>
+          <div class="field"><span class="lbl" id="pg3-l">Studio export</span><div class="m-progress err" role="progressbar" aria-labelledby="pg3-l" aria-valuenow="38" aria-valuemin="0" aria-valuemax="100"><div style="width:38%"></div></div><div class="err">@@I:circle-x@@<span>Export stopped at chapter 4. Retry to continue from there.</span></div></div>
+          <pre class="spec">bar 8px · radius 4 · track --surface-3 · fill --primary · error fill --danger
+indeterminate 40% segment, 1.4s loop · reduced motion: static 40% bar with "Working" text
+skeleton --surface-3 · shimmer 1.6s · aria-busy on the region, one sr-only "Loading" label</pre>
+        </div>
+        <div class="m-empty">
+          <div class="ico">@@I:blend@@</div>
+          <h3>No mixes yet</h3>
+          <p>Pick two voices you own and blend them into a new one. Your mix keeps a record of where it came from.</p>
+          <button class="m-btn primary" type="button">@@I:plus@@Start a mix</button>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="panel">
+          <div class="m-drop" tabindex="0" role="button" id="drop" aria-describedby="drop-help">
+            <span class="ico">@@I:upload@@</span>
+            <b>Drop audio here, or choose a file</b>
+            <small id="drop-help">MP3, WAV, M4A or FLAC · up to 50 MB · at least 30 seconds of speech</small>
+          </div>
+          <input type="file" id="dropInput" accept="audio/*" hidden>
+          <div id="dropFiles" style="display:flex;flex-direction:column;gap:8px;"></div>
+        </div>
+        <div class="panel">
+          <div class="m-drop error" aria-describedby="drop-err2">
+            <span class="ico" style="color:var(--danger)">@@I:file-audio@@</span>
+            <b>interview_final.mov</b>
+            <small>Error state</small>
+          </div>
+          <div class="err" id="drop-err2">@@I:circle-x@@<span>This is a video file. Upload audio only (MP3, WAV, M4A or FLAC), or use Dubbing for video.</span></div>
+          <pre class="spec">dropzone  1.5px dashed --border-strong · radius 16 · 28px pad · hover/drag --primary border + --surface-2
+keyboard  Enter/Space opens the file picker · type sniffed from file bytes on the server, not the name
+rows      name truncates · size · remove button (aria-label "Remove file name")</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Audio -->
+    <section id="audio">
+      <div class="sec-head"><h2>Audio recorder and player</h2><p>The recorder shows the consent phrase the speaker must read. Players share one rule: starting one pauses any other.</p></div>
+      <div class="grid2">
+        <div class="m-rec" id="rec">
+          <div class="overline">Consent check · read this aloud</div>
+          <div class="phrase" id="phrase">Seven harbour lights glow over the quiet blue tide.</div>
+          <div class="rec-row">
+            <button class="rec-btn" type="button" id="recBtn" aria-label="Start recording">@@I:mic@@</button>
+            <div class="rec-time" id="recTime" aria-live="off">0:00</div>
+            <div class="meter" id="meter" aria-hidden="true"></div>
+          </div>
+          <p class="note" id="recStatus" role="status">This preview simulates the microphone. In the app, the browser asks for mic access first.</p>
+          <pre class="spec">record button 56px · --danger-solid · pulse ring while live · Space toggles
+states  idle → asking for mic → recording (timer, live meter) → review (player, Re-record, Use) → verifying → verified / no match
+errors  "Mic access is blocked. Allow it in your browser's site settings, then try again."
+        "We couldn't match this to your samples. Read the phrase again in the same voice."</pre>
+        </div>
+        <div class="panel">
+          <div class="m-player" data-player data-seed="3" data-dur="42">
+            <button class="play" type="button" aria-label="Play Nadia × Arlo">@@I:play@@</button>
+            <div class="p-meta"><span class="t">Nadia × Arlo · podcast intro</span><canvas class="wave" tabindex="0" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="42" aria-valuenow="0" aria-valuetext="0:00 of 0:42"></canvas></div>
+            <div class="p-time">0:00 / 0:42</div>
+          </div>
+          <div class="m-player" data-player data-seed="11" data-dur="18">
+            <button class="play" type="button" aria-label="Play Arlo">@@I:play@@</button>
+            <div class="p-meta"><span class="t">Arlo · sample</span><canvas class="wave" tabindex="0" role="slider" aria-label="Seek" aria-valuemin="0" aria-valuemax="18" aria-valuenow="0" aria-valuetext="0:00 of 0:18"></canvas></div>
+            <div class="p-time">0:00 / 0:18</div>
+          </div>
+          <pre class="spec">player   play 44px --primary · waveform 48px high, bars 3px wide, 2px gap, radius 1.5
+         played bars --gradient-brand, unplayed --border-strong · the waveform is a slider:
+         ←/→ seek 5s, Home/End, Space plays · one player at a time across the page
+loading  bars as skeleton · reduced motion: playhead still moves (it is content), no pulsing · error: "This audio didn't load. Try again." with Retry</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Brand -->
+    <section id="brand">
+      <div class="sec-head">
+        <div class="overline">8 · Brand</div>
+        <h2>Five taglines and the story</h2>
+        <p>Original lines in the Mimix voice: friendly, confident, creative and short. The first one is my pick for the homepage.</p>
+      </div>
+      <ol class="tagline-list" style="padding:0;margin:0;">
+        <li class="rec"><div><b>Two voices in. One voice out.</b><span>The product in six words. Pairs with the Voice Mixer demo in the hero.</span></div></li>
+        <li><div><b>Mix it. Mimic it. Make it yours.</b><span>Says the name out loud and covers mixing, cloning and creating.</span></div></li>
+        <li><div><b>Every voice starts with a blend.</b><span>For the mixer page and brand campaigns.</span></div></li>
+        <li><div><b>Find your sound, then make a new one.</b><span>Speaks to creators browsing the library before they mix.</span></div></li>
+        <li><div><b>Real voices, with the speaker's yes.</b><span>For trust and safety pages. Leads with consent.</span></div></li>
+      </ol>
+      <div class="panel">
+        <div class="overline">Brand story</div>
+        <p class="story">Every voice is a mix. You sound a little like the people who raised you, the places you lived and the voices you loved listening to. Mimix is built on that idea. Pick two or three voices, blend them, and hear something new that still carries where it came from. Clone your own voice to read your scripts, design one from a few words, or turn a podcast into twelve languages over lunch. Every voice in Mimix comes with the speaker's consent and a record of how it was made, so creators, studios and teachers can use what they make with confidence.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer class="foot">Mimix design system · Phase 1 · Generated from tokens.json · Lucide icons, ISC licence</footer>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+const DATA = /*@@DATA@@*/null;
+const ICONS = /*@@ICONS@@*/null;
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const icon = (n, cls = "") => ICONS[n].replace('class="lucide', 'class="lucide ' + cls);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+/* Spinner with a still fallback: reduced motion shows an hourglass icon and "Loading…" instead of a turning circle. */
+const spinner = (cls = "") => `<span class="m-spinner" role="status"><span class="m-spinner__anim">${icon("loader-circle", "spin " + cls)}<span class="sr-only">Loading…</span></span><span class="m-spinner__still">${icon("hourglass", cls)}<span>Loading…</span></span></span>`;
+
+/* ---------- Theme ---------- */
+const root = document.documentElement;
+function applyTheme(v) {
+  if (v === "system") root.removeAttribute("data-theme"); else root.setAttribute("data-theme", v);
+  $$("[data-theme-set]").forEach(b => b.setAttribute("aria-checked", String(b.dataset.themeSet === v)));
+  try { localStorage.setItem("mimix-theme", v); } catch (e) {}
+  requestAnimationFrame(() => { drawHero(); drawAllWaves(); renderContrast(); });
+}
+let saved = "system";
+try { saved = localStorage.getItem("mimix-theme") || "system"; } catch (e) {}
+$$("[data-theme-set]").forEach(b => b.addEventListener("click", () => applyTheme(b.dataset.themeSet)));
+radioKeys($(".top .m-seg"));
+matchMedia("(prefers-color-scheme: light)").addEventListener("change", () => { if (!root.hasAttribute("data-theme")) applyTheme("system"); });
+const cssVar = n => getComputedStyle(root).getPropertyValue(n).trim();
+
+/* ---------- Contrast maths ---------- */
+function hexToRgb(h) { h = h.replace("#", ""); return [0, 2, 4].map(i => parseInt(h.substr(i, 2), 16)); }
+function lum(h) { return hexToRgb(h).map(v => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }).reduce((a, v, i) => a + v * [0.2126, 0.7152, 0.0722][i], 0); }
+function ratio(a, b) { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+const fmt = r => (Math.floor(r * 100) / 100).toFixed(2);
+
+/* ---------- Palette ---------- */
+(function palette() {
+  const strip = $("#photoStrip");
+  DATA.photo.forEach(([name, hex]) => {
+    const d = document.createElement("div");
+    d.style.background = hex;
+    d.style.color = lum(hex) > 0.3 ? "#04222B" : "#E2F4F0";
+    d.innerHTML = `<b>${name}</b><span class="mono">${hex}</span>`;
+    strip.appendChild(d);
+  });
+  const roleNotes = {
+    "bg": "Page", "surface": "Cards, panels", "surface-2": "Inputs, wells", "surface-3": "Hover, selected",
+    "border": "Dividers (decorative)", "border-strong": "Input outlines", "text": "Body text", "text-muted": "Secondary text",
+    "text-subtle": "Captions, placeholders", "primary": "Primary fill", "primary-hover": "Primary hover", "primary-active": "Primary pressed",
+    "on-primary": "Text on primary", "primary-text": "Links", "accent": "Icons, highlights", "success": "Success", "warning": "Warning",
+    "danger": "Error text", "danger-solid": "Destructive fill", "danger-solid-hover": "Destructive hover", "on-danger": "Text on destructive", "focus": "Focus ring"
+  };
+  const photoHex = Object.fromEntries(DATA.photo.map(([n, h]) => [h.toUpperCase(), n]));
+  for (const t of ["dark", "light"]) {
+    const rows = Object.entries(DATA.colors[t]).filter(([k, v]) => v.startsWith("#") && roleNotes[k]);
+    $(t === "dark" ? "#rolesDark" : "#rolesLight").innerHTML = `<thead><tr><th>Token</th><th>Value</th><th>Use</th><th>Source</th></tr></thead><tbody>` +
+      rows.map(([k, v]) => `<tr><td><code>--${k}</code></td><td><span class="chip"><i style="background:${v}"></i>${v}</span></td><td>${roleNotes[k]}</td><td class="subtle">${photoHex[v.toUpperCase()] ? "Photo · " + photoHex[v.toUpperCase()] : "Derived"}</td></tr>`).join("") + "</tbody>";
+  }
+})();
+
+/* ---------- Before / after sheet ---------- */
+(function beforeAfter() {
+  const host = $("#baSheet");
+  for (const t of ["dark", "light"]) {
+    const rows = DATA.beforePairs.filter(p => p.theme === t);
+    for (const side of ["before", "after"]) {
+      const card = document.createElement("div");
+      card.className = "ba-card";
+      const fails = side === "before" ? rows.filter(p => !p.pass).length : 0;
+      card.innerHTML = `<header><span>${t === "dark" ? "Dark" : "Light"} · ${side === "before" ? "Before (photo as-is)" : "After (shipped tokens)"}</span><span>${side === "before" ? fails + " of " + rows.length + " fail" : "all " + rows.length + " pass"}</span></header>`;
+      const list = document.createElement("div");
+      list.className = "ba-rows";
+      rows.forEach(p => {
+        const fg = side === "before" ? p.fgHex : p.afterFgHex, bg = side === "before" ? p.bgHex : p.afterBgHex;
+        const r = ratio(fg, bg), ok = r >= p.need;
+        const isUi = p.need === 3;
+        const row = document.createElement("div");
+        row.className = "ba-row";
+        row.style.background = bg; row.style.color = fg;
+        row.innerHTML = `<div class="sample">${isUi ? `<span style="display:inline-block;width:72px;height:18px;border:2px solid ${fg};border-radius:6px;vertical-align:middle"></span> ${p.fg}` : (p.fg === "on-primary" ? "Generate speech" : "Mix two voices into one")}<small>--${p.fg} on --${p.bg} · ${fg} / ${bg}</small></div><span class="verdict ${ok ? "v-pass" : "v-fail"}">${fmt(r)} ${ok ? "pass" : "fail"}</span>`;
+        list.appendChild(row);
+      });
+      card.appendChild(list);
+      host.appendChild(card);
+    }
+  }
+})();
+
+/* ---------- Contrast table ---------- */
+let ctTheme = "dark";
+function renderContrast() {
+  const rows = DATA.pairs.filter(p => p.theme === ctTheme);
+  let fails = 0;
+  $("#ctTable").innerHTML = `<thead><tr><th>Foreground</th><th>Background</th><th>Sample</th><th>Type</th><th>Need</th><th>Ratio</th><th>Result</th></tr></thead><tbody>` +
+    rows.map(p => {
+      const r = ratio(p.fgHex, p.bgHex), ok = r >= p.need; if (!ok) fails++;
+      const sample = p.kind === "ui" ? `<span style="display:inline-block;width:56px;height:20px;border-radius:6px;border:2px solid ${p.fgHex};background:${p.bgHex}"></span>` : `<span style="display:inline-block;padding:2px 10px;border-radius:6px;background:${p.bgHex};color:${p.fgHex};font-weight:500">Aa voice</span>`;
+      return `<tr><td><span class="chip"><i style="background:${p.fgHex}"></i>--${p.fg}</span></td><td><span class="chip"><i style="background:${p.bgHex}"></i>--${p.bg}</span></td><td>${sample}</td><td>${p.kind === "ui" ? "UI 1.4.11" : "Text 1.4.3"}</td><td>${p.need}:1</td><td class="mono">${fmt(r)}</td><td><span class="verdict ${ok ? "v-pass" : "v-fail"}">${ok ? "Pass" : "Fail"}</span></td></tr>`;
+    }).join("") + "</tbody>";
+  $("#ctSummary").textContent = `${rows.length} pairs checked, ${fails} failures.`;
+}
+const ctSeg = $("#ctTheme");
+$$("button", ctSeg).forEach(b => b.addEventListener("click", () => { ctTheme = b.dataset.v; $$("button", ctSeg).forEach(x => x.setAttribute("aria-checked", String(x === b))); renderContrast(); }));
+radioKeys(ctSeg);
+
+/* ---------- Type and scales ---------- */
+(function scales() {
+  const types = [["7xl", 72, 76, "display"], ["6xl", 60, 64, "display"], ["5xl", 48, 56, "display"], ["4xl", 36, 44, "display"], ["3xl", 30, 36, "display"], ["2xl", 24, 32, "display"], ["xl", 20, 28, "display"], ["lg", 18, 28, "body"], ["base", 16, 24, "body"], ["sm", 14, 20, "body"], ["xs", 12, 16, "body"]];
+  $("#typeScale").innerHTML = types.map(([n, s, l, f]) => `<div class="type-row"><div class="spec">${n}<br>${s}/${l}${s >= 36 ? "<br>−0.02em" : ""}</div><div style="font-family:var(--font-${f});font-size:var(--text-${n});line-height:var(--leading-${n});letter-spacing:${s >= 36 ? "-0.02em" : "0"};font-weight:${f === "display" ? 600 : 400}">${s >= 24 ? "Blend a warmer narrator" : "Generate speech in your mixed voice, then download it as MP3 or WAV."}</div></div>`).join("");
+  $("#spaceScale").innerHTML = [4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96, 128].map((px, i) => `<div class="space-row"><span class="mono">${px}px</span><div class="space-bar" style="width:min(${px * 2}px, 100%)"></div></div>`).join("");
+  $("#radScale").innerHTML = [["sm", "6px", "chips"], ["md", "10px", "buttons, inputs"], ["lg", "16px", "cards"], ["xl", "24px", "panels, modals"], ["full", "9999px", "pills, avatars"]].map(([n, v, u]) => `<div class="rad-box" style="border-radius:var(--radius-${n})"><span style="text-align:center">${v}<br><span class="subtle" style="font-size:12px">${u}</span></span></div>`).join("");
+  $("#scaleSpec").textContent = `--space-*      4 8 12 16 20 24 32 40 48 64 80 96 128 (px)
+--radius-*     sm 6 · md 10 · lg 16 · xl 24 · full 9999
+--shadow-sm    ${cssVar("--shadow-sm")}
+--shadow-md    ${cssVar("--shadow-md")}
+--shadow-lg    ${cssVar("--shadow-lg")}
+--glow         ${cssVar("--glow")}
+--gradient-brand  ${cssVar("--gradient-brand")}
+--gradient-cta    ${cssVar("--gradient-cta")}`;
+})();
+
+/* ---------- Motion ---------- */
+$("#motionGo").addEventListener("click", () => {
+  const tracks = $$(".motion-track");
+  tracks.forEach(t => {
+    t.style.setProperty("--track-w", t.clientWidth + "px");
+    const dot = $(".motion-dot", t);
+    const going = !t.classList.contains("go");
+    dot.style.transitionDuration = reduce.matches ? "0ms" : t.dataset.d;
+    dot.style.transitionTimingFunction = going ? "var(--ease-enter)" : "var(--ease-exit)";
+    t.classList.toggle("go");
+  });
+  $("#motionNote").textContent = reduce.matches ? "Reduced motion is on, so the dots jump." : "Enter curve out, exit curve back.";
+});
+
+/* ---------- Icons ---------- */
+$("#iconGrid").innerHTML = Object.keys(ICONS).map(n => `<div class="icon-cell"><div class="sizes">${icon(n, "i16")}${icon(n)}${icon(n, "i24")}</div>${n}</div>`).join("");
+
+/* ---------- Breakpoints bar ---------- */
+$("#bpBar").innerHTML = [[0, "base"], [640, "sm 640"], [768, "md 768"], [1024, "lg 1024"], [1280, "xl 1280"], [1536, "2xl 1536"]].map(([px, l]) => `<span style="left:${px / 1920 * 100}%">${l}</span>`).join("");
+
+/* ---------- Button states grid ---------- */
+(function btnGrid() {
+  const cols = ["Default", "Hover", "Focus", "Active", "Disabled", "Loading", "Error"];
+  const kinds = [["primary", "Primary", "wand-sparkles", "Generate"], ["secondary", "Secondary", "download", "Download"], ["ghost", "Ghost", "copy", "Duplicate"], ["danger", "Destructive", "trash-2", "Delete"]];
+  let h = `<div></div>` + cols.map(c => `<div class="h">${c}</div>`).join("");
+  kinds.forEach(([k, label, ic, txt]) => {
+    h += `<div class="rl">${label}</div>`;
+    h += `<div><button class="m-btn ${k}" type="button">${icon(ic)}${txt}</button></div>`;
+    h += `<div><button class="m-btn ${k} is-hover" type="button" tabindex="-1">${icon(ic)}${txt}</button></div>`;
+    h += `<div><button class="m-btn ${k} is-focus" type="button" tabindex="-1">${icon(ic)}${txt}</button></div>`;
+    h += `<div><button class="m-btn ${k} is-active" type="button" tabindex="-1">${icon(ic)}${txt}</button></div>`;
+    h += `<div><button class="m-btn ${k}" type="button" disabled>${icon(ic)}${txt}</button></div>`;
+    h += `<div><button class="m-btn ${k}" type="button" aria-busy="true" tabindex="-1">${spinner()}<span class="m-btn__label">${txt}</span></button></div>`;
+    h += `<div class="subtle" style="font-size:12px">Not used</div>`;
+  });
+  $("#btnStates").innerHTML = h;
+})();
+
+/* ---------- Input states grid ---------- */
+(function inputGrid() {
+  const cols = ["Default", "Hover", "Focus", "Disabled", "Loading", "Error"];
+  let h = `<div></div>` + cols.map(c => `<div class="h">${c}</div>`).join("");
+  const cell = (inner) => `<div style="min-width:160px">${inner}</div>`;
+  h += `<div class="rl">Input</div>`;
+  h += cell(`<input class="m-input" placeholder="Name this voice" aria-label="Default example">`);
+  h += cell(`<input class="m-input is-hover" placeholder="Name this voice" aria-label="Hover example" tabindex="-1">`);
+  h += cell(`<input class="m-input is-focus" value="Nadia × Arlo" aria-label="Focus example" tabindex="-1">`);
+  h += cell(`<input class="m-input" value="Nadia × Arlo" aria-label="Disabled example" disabled>`);
+  h += cell(`<div class="input-wrap"><input class="m-input" value="Checking name" aria-label="Loading example" aria-busy="true" tabindex="-1"><span class="trail">${spinner("i16")}</span></div>`);
+  h += cell(`<input class="m-input" value="" placeholder="Name this voice" aria-invalid="true" aria-label="Error example" aria-describedby="ie1" tabindex="-1"><div class="err" id="ie1" style="margin-top:6px">${icon("circle-x")}<span>Give the voice a name.</span></div>`);
+  h += `<div class="rl">Select</div>`;
+  const sel = (cls, extra = "") => `<select class="m-select ${cls}" aria-label="Model example" ${extra}><option>Mimix v1</option></select>`;
+  h += cell(sel("")) + cell(sel("is-hover", 'tabindex="-1"')) + cell(sel("is-focus", 'tabindex="-1"')) + cell(sel("", "disabled"));
+  h += cell(`<div class="skel" style="height:40px;border-radius:10px"></div>`);
+  h += cell(sel("", 'aria-invalid="true" tabindex="-1"') + `<div class="err" style="margin-top:6px">${icon("circle-x")}<span>Pick a model.</span></div>`);
+  $("#inputStates").innerHTML = h;
+})();
+document.documentElement.style.setProperty("--chev", `url("data:image/svg+xml,${encodeURIComponent(ICONS["chevron-down"].replace('stroke="currentColor"', 'stroke="#8BB8B5"'))}")`);
+
+/* ---------- Textarea count, email validation, slider fill ---------- */
+const ta = $("#f-script"), taCount = $("#f-script-count");
+const updCount = () => { taCount.textContent = `${ta.value.length.toLocaleString()} / 5,000 characters · about ${Math.max(1, Math.round(ta.value.length / 15))} seconds`; };
+ta.addEventListener("input", updCount); updCount();
+const em = $("#f-email"), emErr = $("#f-email-err");
+em.addEventListener("blur", () => { const bad = em.value && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value); em.setAttribute("aria-invalid", String(!!bad)); emErr.hidden = !bad; });
+em.addEventListener("input", () => { if (em.getAttribute("aria-invalid") === "true" && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em.value)) { em.setAttribute("aria-invalid", "false"); emErr.hidden = true; } });
+$$(".m-slider").forEach(s => { const set = () => { s.style.setProperty("--p", (s.value - s.min) / (s.max - s.min) * 100 + "%"); const o = $(`output[for="${s.id}"]`); if (o) o.textContent = s.value + "%"; }; s.addEventListener("input", set); set(); });
+
+/* ---------- Combobox ---------- */
+(function combo() {
+  const voices = [["Nadia", "Clone · English"], ["Arlo", "Designed · English"], ["Nadia × Arlo", "Mix · 60 / 40"], ["Tide", "Library · Narration"], ["Harbor", "Library · Characters"], ["Mist", "Library · Conversational"], ["Lagoon", "Library · Bahasa Melayu"]];
+  const input = $("#cb-input"), list = $("#cb-list");
+  let items = [], active = -1;
+  function render() {
+    const q = input.value.toLowerCase();
+    items = voices.filter(([n]) => n.toLowerCase().includes(q));
+    list.innerHTML = items.length ? items.map(([n, d], i) => `<div class="opt" role="option" id="cbo-${i}" aria-selected="${i === active}">${n}<small>${d}</small></div>`).join("") : `<div class="opt" aria-disabled="true">No voices match "${input.value.replace(/[<>&"]/g, "")}"</div>`;
+    input.setAttribute("aria-activedescendant", active >= 0 ? "cbo-" + active : "");
+  }
+  const open = () => { list.hidden = false; input.setAttribute("aria-expanded", "true"); render(); };
+  const close = () => { list.hidden = true; input.setAttribute("aria-expanded", "false"); active = -1; input.removeAttribute("aria-activedescendant"); };
+  const pick = i => { if (items[i]) { input.value = items[i][0]; } close(); };
+  input.addEventListener("focus", open);
+  input.addEventListener("input", () => { active = 0; open(); });
+  input.addEventListener("keydown", e => {
+    if (e.key === "ArrowDown") { e.preventDefault(); if (list.hidden) open(); active = Math.min(items.length - 1, active + 1); render(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); active = Math.max(0, active - 1); render(); }
+    else if (e.key === "Enter" && !list.hidden) { e.preventDefault(); pick(active); }
+    else if (e.key === "Escape") { close(); }
+  });
+  list.addEventListener("mousedown", e => { const o = e.target.closest('[role="option"]'); if (o) { e.preventDefault(); pick(+o.id.split("-")[1]); } });
+  input.addEventListener("blur", () => setTimeout(close, 0));
+})();
+
+/* ---------- Tabs and radio groups (roving tabindex) ---------- */
+(function tabs() {
+  const tl = $('#tabsDemo [role="tablist"]');
+  const tabs = $$('[role="tab"]', tl);
+  const select = t => { tabs.forEach(x => { const on = x === t; x.setAttribute("aria-selected", String(on)); x.tabIndex = on ? 0 : -1; $("#" + x.getAttribute("aria-controls")).hidden = !on; }); t.focus(); };
+  tabs.forEach(t => t.addEventListener("click", () => select(t)));
+  tl.addEventListener("keydown", e => {
+    const en = tabs.filter(t => !t.disabled); let i = en.indexOf(document.activeElement);
+    if (e.key === "ArrowRight") i = (i + 1) % en.length; else if (e.key === "ArrowLeft") i = (i - 1 + en.length) % en.length; else if (e.key === "Home") i = 0; else if (e.key === "End") i = en.length - 1; else return;
+    e.preventDefault(); select(en[i]);
+  });
+})();
+function radioKeys(group) {
+  const btns = $$('[role="radio"]', group);
+  btns.forEach(b => { b.tabIndex = b.getAttribute("aria-checked") === "true" ? 0 : -1; });
+  group.addEventListener("click", e => { const b = e.target.closest('[role="radio"]'); if (!b) return; btns.forEach(x => { x.setAttribute("aria-checked", String(x === b)); x.tabIndex = x === b ? 0 : -1; }); });
+  group.addEventListener("keydown", e => {
+    let i = btns.indexOf(document.activeElement); if (i < 0) return;
+    if (["ArrowRight", "ArrowDown"].includes(e.key)) i = (i + 1) % btns.length; else if (["ArrowLeft", "ArrowUp"].includes(e.key)) i = (i - 1 + btns.length) % btns.length; else return;
+    e.preventDefault(); btns[i].focus(); btns[i].click();
+  });
+}
+radioKeys($("#segDemo"));
+
+/* ---------- Dropdown menu ---------- */
+(function menu() {
+  const btn = $("#menuBtn"), list = $("#menuList"), items = $$('[role="menuitem"]', list);
+  const enabled = () => items.filter(i => i.getAttribute("aria-disabled") !== "true");
+  const open = (focusLast) => { list.hidden = false; btn.setAttribute("aria-expanded", "true"); const en = enabled(); (focusLast ? en[en.length - 1] : en[0]).focus(); };
+  const close = (ret = true) => { list.hidden = true; btn.setAttribute("aria-expanded", "false"); if (ret) btn.focus(); };
+  btn.addEventListener("click", () => list.hidden ? open() : close());
+  btn.addEventListener("keydown", e => { if (e.key === "ArrowDown") { e.preventDefault(); open(); } if (e.key === "ArrowUp") { e.preventDefault(); open(true); } });
+  list.addEventListener("keydown", e => {
+    const en = enabled(); let i = en.indexOf(document.activeElement);
+    if (e.key === "ArrowDown") i = (i + 1) % en.length; else if (e.key === "ArrowUp") i = (i - 1 + en.length) % en.length; else if (e.key === "Home") i = 0; else if (e.key === "End") i = en.length - 1;
+    else if (e.key === "Escape") { e.preventDefault(); return close(); } else if (e.key === "Enter" || e.key === " ") { e.preventDefault(); document.activeElement.click(); return; } else if (e.key === "Tab") { return close(false); } else return;
+    e.preventDefault(); en[i].focus();
+  });
+  items.forEach(it => it.addEventListener("click", () => { if (it.getAttribute("aria-disabled") === "true") return; close(); toast("ok", it.textContent.trim(), "Done. This is a demo action."); }));
+  document.addEventListener("click", e => { if (!$("#menuHost").contains(e.target) && !list.hidden) close(false); });
+})();
+
+/* ---------- Focus trap helpers ---------- */
+const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+function trap(container, onClose, opener) {
+  const prevOverflow = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+  const key = e => {
+    if (e.key === "Escape") { e.preventDefault(); done(); }
+    if (e.key === "Tab") { const f = $$(FOCUSABLE, container); const first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } }
+  };
+  document.addEventListener("keydown", key);
+  function done() { document.removeEventListener("keydown", key); document.body.style.overflow = prevOverflow; onClose(); opener.focus(); }
+  return done;
+}
+$("#openModal").addEventListener("click", e => {
+  const opener = e.currentTarget;
+  const ov = document.createElement("div");
+  ov.className = "m-overlay";
+  ov.innerHTML = `<div class="m-modal" role="alertdialog" aria-modal="true" aria-labelledby="mdl-t" aria-describedby="mdl-d">
+    <header><h2 id="mdl-t">Delete Nadia?</h2><button class="m-btn ghost icon sm" type="button" data-close aria-label="Close">${icon("x")}</button></header>
+    <p id="mdl-d" class="muted">This removes the voice and its 6 samples for good. 1 mix built from Nadia will stop working. Type the voice name to confirm.</p>
+    <div class="field"><label for="mdl-in">Voice name</label><input class="m-input" id="mdl-in" autocomplete="off" placeholder="Nadia"></div>
+    <div class="actions"><button class="m-btn secondary" type="button" data-close>Cancel</button><button class="m-btn danger" type="button" id="mdl-ok" disabled>${icon("trash-2")}Delete voice</button></div></div>`;
+  document.body.appendChild(ov);
+  const done = trap(ov, () => ov.remove(), opener);
+  $$("[data-close]", ov).forEach(b => b.addEventListener("click", done));
+  ov.addEventListener("mousedown", ev => { if (ev.target === ov) done(); });
+  const inp = $("#mdl-in", ov), ok = $("#mdl-ok", ov);
+  inp.addEventListener("input", () => { ok.disabled = inp.value.trim() !== "Nadia"; });
+  ok.addEventListener("click", () => { done(); toast("ok", "Nadia deleted", "The voice and its samples are gone. This was a demo."); });
+  inp.focus();
+});
+$("#openDrawer").addEventListener("click", e => {
+  const opener = e.currentTarget;
+  const ov = document.createElement("div"); ov.className = "m-drawer-ov";
+  const dr = document.createElement("div"); dr.className = "m-drawer"; dr.setAttribute("role", "dialog"); dr.setAttribute("aria-modal", "true"); dr.setAttribute("aria-labelledby", "dr-t");
+  dr.innerHTML = `<header><h2 id="dr-t" style="font-size:20px;line-height:28px">Voice settings</h2><button class="m-btn ghost icon sm" type="button" data-close aria-label="Close">${icon("x")}</button></header>
+    <div class="field"><div class="slider-head"><label for="dr-s">Similarity</label><output for="dr-s">75%</output></div><input class="m-slider" id="dr-s" type="range" min="0" max="100" value="75"></div>
+    <div class="field"><div class="slider-head"><label for="dr-p">Speed</label><output for="dr-p">100%</output></div><input class="m-slider" id="dr-p" type="range" min="70" max="120" value="100"></div>
+    <label class="m-toggle"><input type="checkbox" role="switch" id="dr-t1" checked><span class="track"></span><span>Speaker boost</span></label>
+    <div style="margin-top:auto;display:flex;gap:8px;justify-content:flex-end"><button class="m-btn secondary" type="button" data-close>Cancel</button><button class="m-btn primary" type="button" data-save>Save</button></div>`;
+  document.body.append(ov, dr);
+  $$(".m-slider", dr).forEach(s => { const set = () => { s.style.setProperty("--p", (s.value - s.min) / (s.max - s.min) * 100 + "%"); $(`output[for="${s.id}"]`, dr).textContent = s.value + "%"; }; s.addEventListener("input", set); set(); });
+  const done = trap(dr, () => { ov.remove(); dr.remove(); }, opener);
+  $$("[data-close]", dr).forEach(b => b.addEventListener("click", done));
+  $("[data-save]", dr).addEventListener("click", () => { done(); toast("ok", "Settings saved", "New generations use these settings."); });
+  ov.addEventListener("click", done);
+  $("#dr-s", dr).focus();
+});
+
+/* ---------- Toasts ---------- */
+function toast(kind, title, body) {
+  const map = { ok: ["t-ok", "circle-check"], err: ["t-err", "circle-x"], warn: ["t-warn", "triangle-alert"], info: ["t-info", "info"] };
+  const t = document.createElement("div");
+  t.className = "m-toast"; t.setAttribute("role", kind === "err" ? "alert" : "status");
+  t.innerHTML = `<span class="${map[kind][0]}">${icon(map[kind][1])}</span><div><b></b><span class="muted"></span></div><button type="button" aria-label="Dismiss">${icon("x")}</button>`;
+  $("b", t).textContent = title; $(".muted", t).textContent = body;
+  $("#toasts").appendChild(t);
+  let left = 6000, start = Date.now(), timer;
+  const remove = () => { clearTimeout(timer); t.style.transition = "opacity 150ms var(--ease-exit)"; t.style.opacity = "0"; setTimeout(() => t.remove(), 150); };
+  const run = () => { start = Date.now(); timer = setTimeout(remove, left); };
+  const pause = () => { clearTimeout(timer); left -= Date.now() - start; };
+  t.addEventListener("mouseenter", pause); t.addEventListener("mouseleave", run);
+  t.addEventListener("focusin", pause); t.addEventListener("focusout", run);
+  $("button", t).addEventListener("click", remove);
+  run();
+}
+$("#toastOk").addEventListener("click", () => toast("ok", "Voice saved", "Nadia × Arlo is in My voices."));
+$("#toastErr").addEventListener("click", () => toast("err", "Generation failed", "You have 120 credits left and this needs 640. Top up or shorten the script."));
+
+/* ---------- Table sort ---------- */
+(function sortTable() {
+  const tb = $("#histTable tbody");
+  const toNum = (s, c) => c === 2 ? s.split(":").reduce((a, v) => a * 60 + +v, 0) : c === 3 ? +s.replace(/,/g, "") : s;
+  $$("#histTable th button").forEach(b => {
+    let dir = 1;
+    b.addEventListener("click", () => {
+      const c = +b.dataset.sort;
+      const rows = $$("tr", tb).sort((a, z) => { const x = toNum(a.cells[c].textContent, c), y = toNum(z.cells[c].textContent, c); return (x > y ? 1 : x < y ? -1 : 0) * dir; });
+      rows.forEach(r => tb.appendChild(r));
+      $$("#histTable th").forEach(th => th.removeAttribute("aria-sort"));
+      b.closest("th").setAttribute("aria-sort", dir === 1 ? "ascending" : "descending");
+      dir *= -1;
+    });
+  });
+})();
+
+/* ---------- Upload ---------- */
+(function upload() {
+  const d = $("#drop"), inp = $("#dropInput"), list = $("#dropFiles");
+  const add = f => {
+    const mb = (f.size / 1048576).toFixed(1);
+    const bad = !(f.type || "").startsWith("audio/") || f.size > 50 * 1048576;
+    const row = document.createElement("div"); row.className = "file-row";
+    row.innerHTML = `<span style="color:${bad ? "var(--danger)" : "var(--accent)"}">${icon(bad ? "circle-x" : "file-audio")}</span><div style="min-width:0"><div class="name"></div><div class="${bad ? "err" : "help"}">${bad ? (f.size > 50 * 1048576 ? `This file is ${mb} MB. Upload a file under 50 MB.` : "This isn't an audio file. Upload MP3, WAV, M4A or FLAC.") : mb + " MB · ready"}</div></div><button class="m-btn ghost icon sm" type="button">${icon("x")}</button>`;
+    $(".name", row).textContent = f.name;
+    $("button", row).setAttribute("aria-label", "Remove " + f.name);
+    $("button", row).addEventListener("click", () => row.remove());
+    list.appendChild(row);
+  };
+  d.addEventListener("click", () => inp.click());
+  d.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); inp.click(); } });
+  inp.addEventListener("change", () => [...inp.files].forEach(add));
+  d.addEventListener("dragover", e => { e.preventDefault(); d.classList.add("drag"); });
+  d.addEventListener("dragleave", () => d.classList.remove("drag"));
+  d.addEventListener("drop", e => { e.preventDefault(); d.classList.remove("drag"); [...e.dataTransfer.files].forEach(add); });
+})();
+
+/* ---------- Recorder (simulated) ---------- */
+(function recorder() {
+  const btn = $("#recBtn"), time = $("#recTime"), meter = $("#meter"), status = $("#recStatus");
+  meter.innerHTML = "<i></i>".repeat(32);
+  const bars = $$("i", meter);
+  let live = false, t0 = 0, raf, tick;
+  function frame() {
+    const s = (Date.now() - t0) / 1000;
+    time.textContent = `0:${String(Math.floor(s)).padStart(2, "0")}`;
+    if (!reduce.matches) bars.forEach((b, i) => { b.style.height = (4 + Math.abs(Math.sin(s * 6 + i * 0.7)) * 24 * (0.4 + Math.random() * 0.6)) + "px"; });
+    else bars.forEach((b, i) => { b.style.height = (i % 4 === 0 ? 20 : 12) + "px"; });
+    if (s >= 8) return stop(true);
+    raf = requestAnimationFrame(frame);
+  }
+  function start() { live = true; t0 = Date.now(); btn.classList.add("live"); meter.classList.add("live"); btn.innerHTML = icon("square"); btn.setAttribute("aria-label", "Stop recording"); status.textContent = "Recording. Read the phrase once, then stop."; frame(); }
+  function stop(auto) {
+    live = false; cancelAnimationFrame(raf); btn.classList.remove("live"); meter.classList.remove("live"); btn.innerHTML = icon("mic"); btn.setAttribute("aria-label", "Start recording");
+    bars.forEach(b => b.style.height = "4px");
+    status.textContent = "Checking your voice against the samples…";
+    clearTimeout(tick);
+    tick = setTimeout(() => { status.innerHTML = `<span style="color:var(--success);display:inline-flex;gap:6px;align-items:center">${icon("circle-check", "i16")}Match confirmed. Consent recorded with today's date and an audio fingerprint.</span>`; }, 1400);
+  }
+  btn.addEventListener("click", () => live ? stop() : start());
+})();
+
+/* ---------- Waveform players ---------- */
+let players = [];
+function seeded(seed) { let s = seed; return () => (s = (s * 9301 + 49297) % 233280) / 233280; }
+function makePlayer(el) {
+  const canvas = $("canvas", el), btn = $(".play", el), timeEl = $(".p-time", el);
+  const dur = +el.dataset.dur, rnd = seeded(+el.dataset.seed);
+  const peaks = Array.from({ length: 160 }, (_, i) => { const env = Math.sin(Math.PI * i / 160) * 0.6 + 0.4; return Math.max(0.08, env * (0.35 + rnd() * 0.65)); });
+  const p = { el, pos: 0, playing: false, last: 0, ctx: null, osc: null, gain: null };
+  const fmtT = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+  p.draw = () => {
+    const dpr = devicePixelRatio || 1, w = canvas.clientWidth, h = canvas.clientHeight;
+    if (!w) return;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    const c = canvas.getContext("2d"); c.scale(dpr, dpr);
+    const bw = 3, gap = 2, n = Math.floor(w / (bw + gap));
+    const g = c.createLinearGradient(0, 0, w, 0);
+    g.addColorStop(0, cssVar("--accent") || "#98D8D0"); g.addColorStop(1, cssVar("--primary") || "#4FB8B4");
+    const playedX = (p.pos / dur) * w;
+    for (let i = 0; i < n; i++) {
+      const v = peaks[Math.floor(i / n * peaks.length)], bh = Math.max(3, v * h), x = i * (bw + gap), y = (h - bh) / 2;
+      c.fillStyle = x < playedX ? g : (cssVar("--border-strong") || "#4A9FA3");
+      c.beginPath(); c.roundRect ? c.roundRect(x, y, bw, bh, 1.5) : c.rect(x, y, bw, bh); c.fill();
+    }
+    timeEl.textContent = `${fmtT(p.pos)} / ${fmtT(dur)}`;
+    canvas.setAttribute("aria-valuenow", Math.round(p.pos)); canvas.setAttribute("aria-valuetext", `${fmtT(p.pos)} of ${fmtT(dur)}`);
+  };
+  const tone = on => {
+    try {
+      if (on) {
+        p.ctx = p.ctx || new (window.AudioContext || window.webkitAudioContext)();
+        p.osc = p.ctx.createOscillator(); p.gain = p.ctx.createGain();
+        p.osc.type = "sine"; p.osc.frequency.value = +el.dataset.seed === 3 ? 196 : 247;
+        p.gain.gain.value = 0.0001; p.gain.gain.exponentialRampToValueAtTime(0.04, p.ctx.currentTime + 0.15);
+        p.osc.connect(p.gain).connect(p.ctx.destination); p.osc.start();
+      } else if (p.osc) { p.gain.gain.exponentialRampToValueAtTime(0.0001, p.ctx.currentTime + 0.1); p.osc.stop(p.ctx.currentTime + 0.12); p.osc = null; }
+    } catch (e) {}
+  };
+  const loop = ts => { if (!p.playing) return; if (p.last) p.pos += (ts - p.last) / 1000; p.last = ts; if (p.pos >= dur) { p.pos = dur; p.pause(); p.pos = 0; } p.draw(); if (p.playing) requestAnimationFrame(loop); };
+  p.play = () => { players.forEach(o => o !== p && o.playing && o.pause()); p.playing = true; p.last = 0; btn.innerHTML = icon("pause"); btn.setAttribute("aria-label", btn.getAttribute("aria-label").replace("Play", "Pause")); tone(true); requestAnimationFrame(loop); };
+  p.pause = () => { p.playing = false; btn.innerHTML = icon("play"); btn.setAttribute("aria-label", btn.getAttribute("aria-label").replace("Pause", "Play")); tone(false); p.draw(); };
+  btn.addEventListener("click", () => p.playing ? p.pause() : p.play());
+  canvas.addEventListener("click", e => { const r = canvas.getBoundingClientRect(); p.pos = (e.clientX - r.left) / r.width * dur; p.draw(); });
+  canvas.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight") p.pos = Math.min(dur, p.pos + 5); else if (e.key === "ArrowLeft") p.pos = Math.max(0, p.pos - 5); else if (e.key === "Home") p.pos = 0; else if (e.key === "End") p.pos = dur; else if (e.key === " ") { p.playing ? p.pause() : p.play(); } else return;
+    e.preventDefault(); p.draw();
+  });
+  return p;
+}
+players = $$("[data-player]").map(makePlayer);
+function drawAllWaves() { players.forEach(p => p.draw()); }
+
+/* ---------- Hero waveform: two waves merging into one ---------- */
+function drawHero() {
+  const cv = $("#heroWave"), dpr = devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+  if (!w) return;
+  cv.width = w * dpr; cv.height = h * dpr;
+  const c = cv.getContext("2d"); c.scale(dpr, dpr);
+  const a = cssVar("--accent"), p = cssVar("--primary"), m = cssVar("--text-muted");
+  const wave = (yOff, amp, freq, phase, color, from, to, width) => {
+    c.beginPath();
+    for (let x = from; x <= to; x += 2) { const t = x / w; const y = h / 2 + yOff(t) + Math.sin(t * freq + phase) * amp(t); x === from ? c.moveTo(x, y) : c.lineTo(x, y); }
+    c.strokeStyle = color; c.lineWidth = width; c.lineCap = "round"; c.stroke();
+  };
+  const merge = t => Math.max(0, 1 - t / 0.6);
+  wave(t => -h * 0.22 * merge(t), t => 10 + 6 * (1 - merge(t)), 22, 0, a, 16, w * 0.62, 3);
+  wave(t => h * 0.22 * merge(t), t => 10 + 6 * (1 - merge(t)), 22, 1.4, m, 16, w * 0.62, 3);
+  wave(() => 0, t => 18 * Math.sin(Math.PI * Math.min(1, (t - 0.55) / 0.45)), 30, 0.7, p, w * 0.58, w - 16, 4);
+}
+addEventListener("resize", () => { drawHero(); drawAllWaves(); });
+
+applyTheme(saved);
+</script>

@@ -27,7 +27,7 @@ You never type into a terminal. You double-click **Start Mimix** to start it and
 **On a computer that doesn't have the project yet:**
 
 1. In GitHub Desktop, choose **File, Clone repository**.
-2. On the **GitHub.com** tab, pick **mimix**. Leave the local path as it is (usually `Documents\GitHub\mimix` on Windows or `Documents/GitHub/mimix` on a Mac), then click **Clone**.
+2. On the **URL** tab, paste `https://github.com/mechanicb0y/Mimix` (or, if it's your repository, pick **Mimix** on the **GitHub.com** tab). Leave the local path as it is (usually `Documents\GitHub\Mimix` on Windows or `Documents/GitHub/Mimix` on a Mac), then click **Clone**. Without GitHub Desktop, click **Code, Download ZIP** on the repository's page and unzip it instead; updates then mean downloading it again.
 3. Choose **Repository, Show in Explorer** (Windows) or **Repository, Show in Finder** (Mac). This is your project folder.
 
 You'll see six files at the top of the project folder: **Start Mimix**, **Stop Mimix** and **Tune voice check**, one set for Windows (`.cmd`) and one for Mac (`.command`).
