@@ -35,6 +35,7 @@ Everything runs **with no accounts or keys**. Each outside service sits behind a
 
 - Node.js 22 or newer, npm 10 or newer
 - ffmpeg: bundled through `ffmpeg-static`; `FFMPEG_PATH` points at another build
+- For `npm test`: `ffmpeg` and `ffprobe` on the PATH (the audio, Studio and dubbing integration tests make their fixtures with them; CI installs them with apt)
 - For billing locally: [stripe-mock](https://github.com/stripe/stripe-mock) (`go install github.com/stripe/stripe-mock@latest`)
 
 ## Run it
