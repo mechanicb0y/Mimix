@@ -21,7 +21,7 @@ One Next.js app, real voices on your processor, and no accounts or keys to get s
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.3-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![Python engines](https://img.shields.io/badge/engines-Python_3.12-3776AB?style=flat-square&logo=python&logoColor=white)](engines)
 <br>
-[![Tests](https://img.shields.io/badge/tests-370_automated-4FB8B4?style=flat-square)](docs/quality-report.md)
+[![Tests](https://img.shields.io/badge/tests-406_passing-4FB8B4?style=flat-square)](https://github.com/mechanicb0y/Mimix/actions/workflows/ci.yml)
 [![Accessibility](https://img.shields.io/badge/WCAG_2.2_AA-0_axe_violations-10606F?style=flat-square)](docs/quality-report.md)
 [![Lighthouse](https://img.shields.io/badge/Lighthouse_mobile-90%2B-0A3D4A?style=flat-square&logo=lighthouse&logoColor=white)](docs/quality-report.md)
 [![Runs on](https://img.shields.io/badge/runs_on-Windows_%C2%B7_macOS_%C2%B7_Linux-04222B?style=flat-square)](docs/local-setup.md)
@@ -124,7 +124,7 @@ A marketing site, the app, an admin console and a public API in one Next.js 16 p
 <td width="33%" valign="top">
 
 ### 🧪 Built to ship
-**370 automated tests**, axe (WCAG 2.2 AA) on every page in both themes with zero violations, Lighthouse 90+ on mobile, an OWASP Top 10 review and strict security headers.
+**406 automated tests**, axe (WCAG 2.2 AA) on every page in both themes with zero violations, Lighthouse 90+ on mobile, an OWASP Top 10 review and strict security headers.
 
 </td>
 </tr>
@@ -481,8 +481,8 @@ One credit per character of speech. Top-ups: 50,000 credits for $12, 250,000 for
 
 | Check | Result |
 |---|---|
-| Unit and integration tests (Vitest, real Postgres in PGlite, stripe-mock) | 237 |
-| Browser tests (Playwright, production build) | 133: sign-up to download, a Stripe upgrade with a signed webhook, cloning with consent, mixing, an admin credit change |
+| Unit and integration tests (Vitest, real Postgres in PGlite, stripe-mock) | **271 passing**, 4 skipped in CI (they need a live Kokoro server or a running stripe-mock) |
+| Browser tests (Playwright, production build) | **135 passing**: sign-up to download, a Stripe upgrade with a signed webhook, cloning with consent, mixing, an admin credit change |
 | Accessibility | axe (WCAG 2.2 AA rules) on every public page, app page and console section, light and dark: **zero violations** |
 | Layout | Every page at 375 to 1920 px: no sideways scrolling, 24 px minimum targets, 44 px on touch screens |
 | Keyboard | Tab through every page: every control reachable, visible focus, no traps |
@@ -490,7 +490,7 @@ One credit per character of speech. Top-ups: 50,000 credits for $12, 250,000 for
 | Security | [OWASP Top 10 review](docs/security-review.md), Content-Security-Policy, HSTS, COOP, origin checks on cookie writes, encrypted webhook secrets, rate limits |
 | CI | Lint, type check, unit tests, build, `npm audit` and the browser suite on every push |
 
-Numbers are from the [quality report](docs/quality-report.md). Automated accessibility checks are not a full audit; a manual audit is on the roadmap.
+Test counts are from the [CI run on GitHub](https://github.com/mechanicb0y/Mimix/actions/workflows/ci.yml); accessibility and performance results are from the [quality report](docs/quality-report.md). Automated accessibility checks are not a full audit; a manual audit is on the roadmap.
 
 ## 🎨 Brand and design system
 
